@@ -185,6 +185,7 @@ class WidgetSelectionList(SelectionList):
         scrollable=HORIZONTAL|VERTICAL
         """
         self.__widget_class = widget_class
+        self.select_all_check = None
         super().__init__(
             master,
             list_items=list_items,
@@ -226,6 +227,10 @@ class WidgetSelectionList(SelectionList):
 
     def _append(self, item: Any, name: str):
         w = self.__widget_class(master=self._container, text=name, item=item, padding=_PADDING)
+
+        if self.select_all_check and self.select_all_check.value:
+            w.select()
+
         self.controller.items.append(w)
 
         if self.scroll_direction == HORIZONTAL:

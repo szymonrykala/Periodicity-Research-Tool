@@ -17,11 +17,11 @@ from .random_text_view import PatternTextView
 
 class PatternParametersController:
     def __init__(self):
-        self.repetitions_var = IntVar(value=1)
+        self.repetitions_var = IntVar(value=3)
         self.sets_params_vars = {
             "od": IntVar(value=2),
-            "do": IntVar(value=100),
-            "krok": IntVar(value=10),
+            "do": IntVar(value=10),
+            "krok": IntVar(value=1),
         }
 
     @property
@@ -108,13 +108,17 @@ class PatternGeneratorWindowController:
     ):
         self._generator.char_set = charset
 
-        def _gen():
-            for length in length_range:
-                for _ in range(repeats):
-                    for dist in distributions:
-                        yield self._generator.generate(size=length, distrib=dist)
-
-        return tuple(_gen())
+        patterns = []
+        hashes = []
+        for length in length_range:
+            for _ in range(repeats):
+                for dist in distributions:
+                    p = self._generator.generate(size=length, distrib=dist)
+                    p_hash = hash(p)
+                    if p_hash not in hashes:
+                        patterns.append(p)
+                        hashes.append(p_hash)
+        return patterns
 
 
 class PatternGeneratorWindow(TopLevelABC):

@@ -80,6 +80,9 @@ class RandomText:
         if not self._async_done:
             Thread(target=self.__async_compute_desity_matrix).start()
 
+    def __hash__(self):
+        return hash(str(self.text))
+
     def __async_compute_desity_matrix(self):
         logger.info("async computing if needed")
         i = 0

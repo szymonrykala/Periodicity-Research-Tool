@@ -1,6 +1,4 @@
-from tkinter import EW, HORIZONTAL, NSEW, N, S, ttk
-
-from click import style
+from tkinter import HORIZONTAL, NSEW, ttk
 
 from sprt.analysis import PeriodicityAnalysys
 from sprt.components.selection_list import SelectionList, WidgetSelectionList

@@ -52,9 +52,6 @@ class PatternTextView(SelectableWidget):
         super()._on_deselect()
         self.eye_icon_label.configure(style="TLabel")
 
-    def __remove(self, *_):
-        print("usuwanie pattern view")
-
 
 class GeneratedRandomTextView(SelectableWidget):
     def _set_up(self, item: RandomText):
