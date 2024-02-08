@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from io import BytesIO
-from tkinter import NSEW, E, ttk
+from tkinter import NE, NSEW, ttk
 
 from matplotlib import pyplot
 from matplotlib.axes import Axes
@@ -23,14 +23,14 @@ class BasePlotFrame(ABC, ttk.Frame):
 
         self.__img = None
         self.__img_canvas = ttk.Label(self, text=title)
-        self.__img_canvas.grid(column=0, row=1, sticky=NSEW)
+        self.__img_canvas.grid(column=0, row=0, sticky=NSEW)
 
         ttk.Button(
             self,
-            text="inter",
+            text="Otwórz",
             command=self.__show_interactive,
             padding=0,
-        ).grid(row=0, column=0, sticky=E)
+        ).grid(row=0, column=0, sticky=NE)
 
         # self.master.after(500, lambda: self.bind("<Configure>", self.resize))
         # self._resize_counter = 0

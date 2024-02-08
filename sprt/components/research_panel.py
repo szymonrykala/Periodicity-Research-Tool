@@ -1,4 +1,6 @@
-from tkinter import HORIZONTAL, NSEW, N, S, ttk
+from tkinter import EW, HORIZONTAL, NSEW, N, S, ttk
+
+from click import style
 
 from sprt.analysis import PeriodicityAnalysys
 from sprt.components.selection_list import SelectionList, WidgetSelectionList
@@ -41,7 +43,7 @@ class ResearchPanelController:
         return a.length
 
 
-class ResearchPanel(ttk.Frame):
+class ResearchPanel(ttk.LabelFrame):
     def __init__(
         self,
         master,
@@ -49,12 +51,14 @@ class ResearchPanel(ttk.Frame):
         patterns_list: WidgetSelectionList,
         algorithms_list: SelectionList,
     ):
-        super().__init__(master)
+        super().__init__(master, text="Panel badań:")
         self.grid_columnconfigure([1, 2], weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        self.buttons_frame = ttk.Frame(self)
-        self.buttons_frame.grid(column=0, row=0, sticky=NSEW)
+        self.buttons_frame = ttk.Frame(self, padding=5, style="Container.TFrame")
+        self.buttons_frame.grid_columnconfigure(0, weight=1)
+        self.buttons_frame.grid_rowconfigure([0, 1, 2], weight=1)
+        self.buttons_frame.grid(column=0, row=0, sticky=NSEW, padx=(0, 5))
 
         self.results_list = WidgetSelectionList(self, AnalysItemView, scrollable=HORIZONTAL, check_all=True)
         self.results_list.grid(column=1, columnspan=2, row=0, sticky=NSEW)
@@ -64,16 +68,20 @@ class ResearchPanel(ttk.Frame):
         self.__mount_buttons()
 
     def __mount_buttons(self):
-        ttk.Button(self.buttons_frame, text="analizuj", command=self.controller.run_analysys).pack(anchor=N)
+        ttk.Button(
+            self.buttons_frame,
+            text="Badaj wybrane",
+            command=self.controller.run_analysys,
+        ).grid(column=0, row=0, sticky=NSEW, pady=(0, 5))
 
         ttk.Button(
             self.buttons_frame,
-            text="mierz wydajność",
+            text="Wydajność",
             command=self.controller.run_performance_measure,
-        ).pack(anchor=N)
+        ).grid(column=0, row=1, sticky=NSEW, pady=(0, 5))
 
         ttk.Button(
             self.buttons_frame,
             text="usuń wybrane",
             command=self.controller.delete_selected,
-        ).pack(anchor=S, side="bottom")
+        ).grid(column=0, row=2, sticky=NSEW)

@@ -1,4 +1,4 @@
-from tkinter import NSEW, VERTICAL, IntVar, filedialog, simpledialog, ttk
+from tkinter import EW, NSEW, VERTICAL, IntVar, filedialog, simpledialog, ttk
 from typing import Callable, Optional
 
 import numpy
@@ -39,7 +39,7 @@ class PatternParametersController:
 
 class PatternParameters(ttk.Frame):
     def __init__(self, master):
-        super().__init__(master)
+        super().__init__(master, style="Container.TFrame", padding=5)
         self.grid_columnconfigure([0, 1, 2, 3, 4, 5], weight=1)
         self.grid_rowconfigure([0, 1, 2], weight=1)
 
@@ -123,7 +123,6 @@ class PatternGeneratorWindow(TopLevelABC):
         self.minsize(700, 300)
         self.maxsize(900, 400)
 
-        self.configure(padx=5, pady=5)
         self.grid_columnconfigure([0, 1, 2, 3, 4], weight=1)
         self.grid_rowconfigure([0, 1], weight=1)
 
@@ -134,7 +133,7 @@ class PatternGeneratorWindow(TopLevelABC):
             list_items=distributions_dict,
             widget_class=DistributionView,
         )
-        self.distributions.grid(row=0, rowspan=3, column=0, sticky="new")
+        self.distributions.grid(row=0, rowspan=2, column=0, sticky=NSEW)
 
         self.controller = PatternGeneratorWindowController()
 
@@ -142,7 +141,7 @@ class PatternGeneratorWindow(TopLevelABC):
         self.charset.grid(column=1, columnspan=2, row=0, sticky=NSEW, padx=5)
 
         self.params = PatternParameters(self)
-        self.params.grid(column=1, columnspan=2, row=1, sticky=NSEW, padx=5)
+        self.params.grid(column=1, columnspan=2, row=1, sticky=NSEW, padx=5, pady=(5, 0))
 
         self.local_list = WidgetSelectionList(
             self,
@@ -153,10 +152,12 @@ class PatternGeneratorWindow(TopLevelABC):
         )
         self.local_list.grid(row=0, rowspan=2, column=3, columnspan=2, sticky=NSEW)
 
-        ttk.Button(self, text="wprowadź", command=self.__handle_manually_add_pattern).grid(column=1, row=2)
-        ttk.Button(self, text="generuj", command=self.__handle_generate_sets).grid(column=2, row=2)
-        ttk.Button(self, text="usuń", command=self.local_list.remove_selected).grid(column=3, row=2)
-        ttk.Button(self, text="zapisz", command=self.__handle_save_selected_sets).grid(column=4, row=2)
+        buttons = ttk.Frame(self, style="Container.TFrame", padding=(0, 5))
+        buttons.grid_columnconfigure([0, 1, 2], weight=1)
+        ttk.Button(buttons, text="Wprowadź", command=self.__handle_manually_add_pattern).grid(column=0, row=0)
+        ttk.Button(buttons, text="Generuj", command=self.__handle_generate_sets).grid(column=1, row=0)
+        ttk.Button(buttons, text="Zapisz", command=self.__handle_save_selected_sets).grid(column=2, row=0)
+        buttons.grid(column=0, columnspan=5, row=2, sticky=EW, pady=(5, 0))
 
     def __handle_generate_sets(self):
         sets = self.controller.generate_patterns(

@@ -18,39 +18,41 @@ class AnalysisWindow(TopLevelABC):
         scroll.pack(expand=True, fill=BOTH)
         frame = scroll.inner_frame
 
-        ttk.Label(frame, text=f"Analizowany zbiór: {analysys.text_set.name}").pack(fill=X)
-        ttk.Label(frame, text=f"Rozkład: {analysys.text_set.distribution}").pack(fill=X)
-        ttk.Label(
-            frame,
-            text=f"Rzeczywiste parametry: mean={analysys.text_set.mean}, stdev={analysys.text_set.stdev}",
-        ).pack(fill=X)
-        ttk.Label(frame, text=f"Ilość znaków: {analysys.text_set.length}").pack(fill=X)
+        for label in (
+            ttk.Label(frame, text=f"Analizowany zbiór: {analysys.text_set.name}"),
+            ttk.Label(frame, text=f"Rozkład: {analysys.text_set.distribution}"),
+            ttk.Label(
+                frame,
+                text=f"Rzeczywiste parametry: mean={analysys.text_set.mean}, stdev={analysys.text_set.stdev}",
+            ),
+            ttk.Label(frame, text=f"Ilość znaków: {analysys.text_set.length}"),
+        ):
+            label.configure(padding=5)
+            label.pack(fill=X)
+
         self.charset_label = ttk.Label(
             frame,
             text=f"Wykorzystany zbiór znaków: {bytes_to_str(analysys.text_set.charset)}",
         )
-        self.charset_label.pack(fill=X)
+        self.charset_label.pack(fill=X, ipadx=5)
 
         for result in analysys.results:
             pattern_str = bytes_to_str(result.algorithm.pattern)
             if result.index_offset:
-                ttk.Label(
-                    frame,
-                    text=f"Wzorzec: {pattern_str}",
-                    padding=(0, 10, 0, 0),
-                ).pack(fill=X, anchor="center")
-
-                PatternOccurencesChart(frame, pattern=pattern_str, y=result.algorithm.value).pack(fill=X)
+                PatternOccurencesChart(
+                    frame, pattern=pattern_str, y=result.algorithm.value
+                ).pack(fill=X)
 
                 PatternIndexOffsetGroupsChart(
                     frame,
                     pattern=pattern_str,
                     x=result.index_offset_groups.keys(),
                     y=result.index_offset_groups.values(),
-                ).pack(fill=X)
+                ).pack(fill=X, pady=5)
             else:
                 ttk.Label(
                     frame,
                     text=f"Brak wystąpień dla wzorca: {pattern_str}",
-                    padding=(0, 10, 0, 0),
-                ).pack(fill=X)
+                    padding=5,
+                    justify="center"
+                ).pack(fill=X, expand=True, anchor="center", ipadx=5, pady=5)

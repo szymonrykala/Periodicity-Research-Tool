@@ -1,5 +1,5 @@
 from threading import Thread
-from tkinter import EW, HORIZONTAL, NSEW, VERTICAL, ttk
+from tkinter import BOTH, EW, NSEW, VERTICAL, ttk
 from typing import Optional
 
 from sprt.algorithms import AlgorithmStore
@@ -61,48 +61,58 @@ class MainController:
 
 class MainWindow(ttk.Frame):
     def __init__(self, master):
-        super().__init__(master)
+        super().__init__(master, style="App.TFrame")
         self.configure(padding=5)
-        self.grid_columnconfigure([0, 1, 2, 3, 4], weight=1)
+        self.grid_columnconfigure([0, 2], weight=2)
+        self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=2, pad=5)
         self.grid_rowconfigure(2, weight=1, pad=5)
 
         self.controller = MainController()
 
         # --- LISTA ZBIORÓW ---
+        l1 = ttk.LabelFrame(self, text="Zapisane zbiory:")
         self.text_sets = WidgetSelectionList(
-            self,
-            list_items=[],
+            l1,
             widget_class=GeneratedRandomTextView,
             scrollable=VERTICAL,
             check_all=True,
+            remove_clb=self.controller.text_db.delete,
         )
-        self.text_sets.grid(column=0, columnspan=2, row=0, sticky=NSEW, padx=(0, 5))
-        ttk.Button(self, text="dodaj", command=self.__show_text_set_generator_window).grid(column=0, row=1)
-        ttk.Button(self, text="usuń", command=self.__handle_remove_from_text_sets).grid(column=1, row=1)
+        self.text_sets.pack(fill=BOTH, expand=True)
+        l1.grid(column=0, row=0, sticky=NSEW, padx=(0, 5))
 
         # --- ALGORYTMY ---
         algorithm_store = AlgorithmStore()
+        l2 = ttk.LabelFrame(self, text="Algorytmy:")
         self.algorithms = SelectionList(
-            self,
+            l2,
             list_items=algorithm_store.algorithms_dict,
             single_select=True,
         )
-        self.algorithms.grid(column=2, row=0, sticky="EW", padx=(0, 5))
+        self.algorithms.pack(fill=BOTH, expand=True)
+        l2.grid(column=1, row=0, sticky="NSEW", padx=(0, 5))
 
         # --- LISTA WZORCÓW ---
+        l3 = ttk.LabelFrame(self, text="Zapisane wzorce:")
         self.patterns_set = WidgetSelectionList(
-            self,
-            list_items=[],
+            l3,
             widget_class=PatternTextView,
             check_all=True,
             scrollable=VERTICAL,
+            remove_clb=self.controller.pattern_db.delete,
         )
-        self.patterns_set.grid(row=0, column=3, columnspan=2, sticky=NSEW)
-        ttk.Button(self, text="dodaj", command=self.__show_pattern_generator_window).grid(column=3, row=1)
-        ttk.Button(self, text="usuń", command=self.__handle_remove_from_patterns_sets).grid(column=4, row=1)
+        self.patterns_set.pack(fill=BOTH, expand=True)
+        l3.grid(row=0, column=2, sticky=NSEW)
 
-        ttk.Separator(self, orient=HORIZONTAL).grid(row=2, column=0, columnspan=5, sticky=EW)
+        # --- PRZYCISKI ---
+        buttons = ttk.Frame(self, style="Container.TFrame", padding=5)
+        buttons.grid_columnconfigure([0, 2], weight=2)
+        buttons.grid_columnconfigure(1, weight=1)
+
+        ttk.Button(buttons, text="dodaj zbiory", command=self.__show_text_set_generator_window).grid(column=0, row=0)
+        ttk.Button(buttons, text="dodaj wzorce", command=self.__show_pattern_generator_window).grid(column=2, row=0)
+        buttons.grid(column=0, columnspan=3, row=1, sticky=EW, pady=5)
 
         # --- PANEL BADAŃ ---
         self.research_panel = ResearchPanel(
@@ -111,7 +121,7 @@ class MainWindow(ttk.Frame):
             patterns_list=self.patterns_set,
             algorithms_list=self.algorithms,
         )
-        self.research_panel.grid(row=3, column=0, columnspan=5, sticky="NSEW")
+        self.research_panel.grid(row=2, column=0, columnspan=5, sticky="NSEW", pady=(5, 0))
 
         self.controller.async_load_patterns(self.patterns_set)
         self.controller.async_load_text_sets(self.text_sets)
@@ -121,15 +131,3 @@ class MainWindow(ttk.Frame):
 
     def __show_pattern_generator_window(self):
         self.controller.open_pattern_generator_window(self.patterns_set)
-
-    def __handle_remove_from_text_sets(self):
-        for item in self.text_sets.selected:
-            self.controller.text_db.delete(item)
-
-        self.text_sets.remove_selected()
-
-    def __handle_remove_from_patterns_sets(self):
-        for item in self.patterns_set.selected:
-            self.controller.pattern_db.delete(item)
-
-        self.patterns_set.remove_selected()

@@ -41,14 +41,22 @@ class TextSetWindow(TopLevelABC):
 
         frame = scroll.inner_frame
 
-        ttk.Label(frame, text=f"Rozkład: {text.distribution}").pack(fill=X)
-        ttk.Label(frame, text=f"Zadane parametry: {text.arguments}").pack(fill=X)
-        ttk.Label(frame, text=f"Rzeczywiste parametry: mean={text.mean}, stdev={text.stdev}").pack(fill=X)
-        ttk.Label(frame, text=f"Ilość znaków: {text.length}").pack(fill=X)
-        self.charset_label = ttk.Label(frame, text=f"Wykorzystany zbiór znaków: {text.parsed_charset}")
-        self.charset_label.pack(fill=X)
+        for label in (
+            ttk.Label(frame, text=f"Rozkład: {text.distribution}"),
+            ttk.Label(frame, text=f"Zadane parametry: {text.arguments}"),
+            ttk.Label(
+                frame,
+                text=f"Rzeczywiste parametry: mean={text.mean}, stdev={text.stdev}",
+            ),
+            ttk.Label(frame, text=f"Ilość znaków: {text.length}"),
+        ):
+            label.configure(padding=5)
+            label.pack(fill=X)
 
-        Histogram(frame, x=text.charset, y=text.density_matrix).pack(fill=X, expand=True)
+        self.charset_label = ttk.Label(frame, text=f"Wykorzystany zbiór znaków: {text.parsed_charset}", padding=5)
+        self.charset_label.pack(fill=X, ipadx=5)
+
+        Histogram(frame, x=text.charset, y=text.density_matrix).pack(fill=X, expand=True, pady=5)
 
         self.pack_text_view(frame, text)
         self.pack_group_charts(frame)
@@ -67,7 +75,7 @@ class TextSetWindow(TopLevelABC):
 
         for i, data in zip(groups, jobs):
             if len(data) > 1:
-                GroupChart(frame, group_size=i, data=data).pack(fill=X)
+                GroupChart(frame, group_size=i, data=data).pack(fill=X, pady=5)
 
     def pack_text_view(self, frame, text: RandomText):
         field = TextField(frame)

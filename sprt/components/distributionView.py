@@ -4,15 +4,13 @@ from typing import Any, Optional
 from sprt.components import SelectableWidget
 from sprt.logger import logger
 from sprt.text_generator import Distribution
+from sprt.utils import validate_digit
 
 
 class DistributionViewController:
     def __init__(self, distribution: type[Distribution]):
         self.distribution = distribution
         self.params = {k: DoubleVar(value=1.0) for k in self.distribution.parameters.keys()}
-
-    def validate_digit(self, value: str):
-        return value.isdigit() or value in "."
 
     def get_value(self) -> Distribution:
         params = {k: val.get() for k, val in self.params.items()}
@@ -23,6 +21,7 @@ class DistributionViewController:
 
 class DistributionView(SelectableWidget):
     def _set_up(self, item: Any):
+        self.configure(style="ListItem.TFrame")
         self.checkbox.grid(row=0, column=0, columnspan=2, sticky="we")
 
         self.columnconfigure(1, weight=1)
@@ -41,7 +40,7 @@ class DistributionView(SelectableWidget):
             ttk.Entry(
                 self,
                 textvariable=var,
-                validatecommand=(self.register(self.controller.validate_digit), "%S"),
+                validatecommand=(self.register(validate_digit), "%S"),
                 validate="key",
-                width=7,
+                width=8,
             ).grid(column=1, row=i, sticky="we")

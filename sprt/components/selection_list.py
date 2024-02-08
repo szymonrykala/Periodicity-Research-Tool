@@ -1,6 +1,6 @@
-from abc import abstractmethod
-from tkinter import BOTH, HORIZONTAL, LEFT, SW, N, Widget, X, Y, ttk
-from typing import Any, Optional
+from abc import ABC, abstractmethod
+from tkinter import BOTH, HORIZONTAL, LEFT, E, N, S, W, Widget, X, Y, ttk
+from typing import Any, Callable, Optional
 
 from sprt.logger import logger
 
@@ -10,11 +10,16 @@ from .scrollable_frame import ScrollableFrame
 _PADDING = (0, 4)
 
 
-class SelectableWidget(ttk.Frame):
+class SelectableWidget(ABC, ttk.Frame):
     def __init__(self, master, text: str, item: Any, **kwargs):
-        super().__init__(master, **kwargs)
-        self._checkbox = Checkbox(self, text=text, onvalue=item, offvalue=None)
+        opt = {
+            "padding": 3,
+        }
+        opt.update(**kwargs)
+        super().__init__(master, **opt)
+        self._checkbox = Checkbox(self, text=text, onvalue=item, offvalue=None, command=self.__handle_toggle)
         self._set_up(item)
+        self.__initial_style = self.cget("style")
 
     @property
     def checkbox(self):
@@ -23,6 +28,18 @@ class SelectableWidget(ttk.Frame):
     @property
     def value(self):
         raise NotImplementedError()
+
+    def __handle_toggle(self):
+        if self.checkbox.value:
+            self._on_select()  # update of checkibox is first
+        else:
+            self._on_deselect()
+
+    def _on_select(self):
+        ...
+
+    def _on_deselect(self):
+        self.configure(style=self.__initial_style)  # revert the style
 
     def select(self):
         return self.checkbox.select()
@@ -68,7 +85,19 @@ class SelectionList(ttk.Frame):
         """
         sroclable=HORIZONTAL|VERTICAL
         """
-        super().__init__(master, **kwargs)
+
+        if "remove_clb" in kwargs:
+            self.__remove_clb: Callable[[Any], None] = kwargs["remove_clb"]
+            del kwargs["remove_clb"]
+        else:
+            self.__remove_clb = lambda x: None
+
+        options = {
+            "style": "Container.TFrame",
+            "padding": 10,
+        }
+        options.update(**kwargs)
+        super().__init__(master, **options)
 
         self.__empty_label: Optional[Widget] = None
         self.__single_select = single_select
@@ -76,12 +105,12 @@ class SelectionList(ttk.Frame):
 
         self.scroll_direction = scrollable
         if scrollable:
-            scroll = ScrollableFrame(self, scrollable)
-            self._container = ttk.Frame(scroll.inner_frame)
+            scroll = ScrollableFrame(self, scrollable, style="Container.TFrame")
+            self._container = ttk.Frame(scroll.inner_frame, style="Container.TFrame")
             self._container.pack(fill=BOTH, expand=True)
             scroll.pack(fill=BOTH, expand=True)
         else:
-            self._container = ttk.Frame(self)
+            self._container = ttk.Frame(self, style="Container.TFrame")
             self._container.pack(fill=BOTH, expand=True, anchor=N)
 
         self.controller = SelectionListController([])
@@ -95,7 +124,7 @@ class SelectionList(ttk.Frame):
 
     def __mount_empty_label(self):
         if not self.__empty_label:
-            self.__empty_label = ttk.Label(self, text="brak zbiorów ...")
+            self.__empty_label = ttk.Label(self, text="brak ...")
             self.__empty_label.pack(fill=X, side="top", before=self._container)
 
     def _single_select_clb(self):
@@ -116,12 +145,11 @@ class SelectionList(ttk.Frame):
 
     def _append(self, item: Any, name: str):
         c = Checkbox(self._container, text=name, onvalue=item, offvalue=None)
-        c.configure(padding=_PADDING)
 
         if self.__single_select:
             c.configure(command=self._single_select_clb)
 
-        c.pack(fill=X, expand=True, anchor="n")
+        c.pack(fill=X, expand=True, anchor="n", pady=2)
 
     def append(self, item: Any, name: str = "usnet"):
         if self.__empty_label:
@@ -133,8 +161,11 @@ class SelectionList(ttk.Frame):
     def remove_selected(self):
         for widget in self._container.pack_slaves():
             if widget.value:
+                self.__remove_clb(widget.value)
+
                 widget.pack_forget()
                 widget.destroy()
+                del widget
 
         if not self._container.pack_slaves():
             self.__mount_empty_label()
@@ -151,7 +182,7 @@ class WidgetSelectionList(SelectionList):
         **kwargs,
     ):
         """
-        sroclable=HORIZONTAL|VERTICAL
+        scrollable=HORIZONTAL|VERTICAL
         """
         self.__widget_class = widget_class
         super().__init__(
@@ -163,30 +194,41 @@ class WidgetSelectionList(SelectionList):
         )
 
         if check_all:
-            self.__all_checked = False
+            controls = ttk.Frame(self, style="Container.TFrame")
+            controls.grid_columnconfigure([0, 1], weight=1)
+            controls.grid_rowconfigure(0, weight=1)
             self.select_all_check = Checkbox(
-                self,
+                controls,
                 text="zaznacz wszystkie",
                 command=self.__handle_check_all,
                 padding=_PADDING,
+                style="Secondary.TCheckbutton",
             )
-            self.select_all_check.pack(fill=X, anchor=SW)
+            ttk.Button(
+                controls,
+                text="usuń",
+                command=self.remove_selected,
+                style="Secondary.TButton",
+                padding=0,
+                width=8,
+                cursor="hand",
+            ).grid(column=1, row=0, sticky=E)
+            self.select_all_check.grid(column=0, row=0, sticky=W)
+            controls.pack(fill=X, anchor=S)
 
     def __handle_check_all(self):
-        self.__all_checked = not self.__all_checked
-
-        if self.__all_checked is True:
-            for chckbox_widget in self._container.pack_slaves():
-                chckbox_widget.select()
+        if self.select_all_check.value:
+            for checkbox_widget in self._container.pack_slaves():
+                checkbox_widget.select()
         else:
-            for chckbox_widget in self._container.pack_slaves():
-                chckbox_widget.deselect()
+            for checkbox_widget in self._container.pack_slaves():
+                checkbox_widget.deselect()
 
     def _append(self, item: Any, name: str):
         w = self.__widget_class(master=self._container, text=name, item=item, padding=_PADDING)
         self.controller.items.append(w)
 
         if self.scroll_direction == HORIZONTAL:
-            w.pack(fill=Y, expand=True, side=LEFT, anchor="w")
+            w.pack(fill=Y, expand=True, side=LEFT, anchor="w", padx=2)
         else:
-            w.pack(fill=X, expand=True, anchor="n")
+            w.pack(fill=X, expand=True, anchor="n", pady=2)

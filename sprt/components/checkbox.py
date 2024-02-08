@@ -6,7 +6,8 @@ class Checkbox(ttk.Checkbutton):
         self.__var = IntVar(value=0)
         self.__on_value = onvalue
         self.__off_value = offvalue
-        kwargs.update(variable=self.__var)
+        self.__command = kwargs.get("command", lambda: None)
+        kwargs.update(variable=self.__var, cursor="hand")
 
         super().__init__(master, **kwargs)
 
@@ -18,6 +19,10 @@ class Checkbox(ttk.Checkbutton):
 
     def select(self):
         self.__var.set(1)
+        self.__command()
+        # self.invoke()
 
     def deselect(self):
         self.__var.set(0)
+        self.__command()
+        # self.invoke()

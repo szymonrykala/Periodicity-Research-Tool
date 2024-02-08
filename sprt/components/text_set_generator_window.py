@@ -1,4 +1,4 @@
-from tkinter import VERTICAL, IntVar, filedialog, ttk
+from tkinter import EW, NSEW, VERTICAL, IntVar, filedialog, ttk
 from typing import Callable, Optional
 
 import numpy
@@ -51,7 +51,7 @@ class SetsGeneratorWindow(TopLevelABC):
         self.maxsize(900, 400)
 
         self.configure(padx=5, pady=5)
-        self.grid_columnconfigure([0, 1, 2, 3, 4], weight=1)
+        self.grid_columnconfigure([0, 1, 2], weight=1)
         self.grid_rowconfigure(0, weight=1)
 
         self.append_main_list_clb = append_main_list_clb
@@ -63,20 +63,22 @@ class SetsGeneratorWindow(TopLevelABC):
             list_items=distributions_dict,
             widget_class=DistributionView,
         )
-        self.distributions.grid(row=0, rowspan=3, column=0, sticky="new")
+        self.distributions.grid(row=0, rowspan=2, column=0, sticky=NSEW)
 
         # --- ZBIÓR ZNAKÓW I DŁUGOŚĆ ---
         self.charset = CharsetEntry(self)
-        self.charset.grid(column=1, columnspan=2, row=0, sticky="nsew", padx=5)
+        self.charset.grid(column=1, row=0, sticky=NSEW, padx=5)
 
-        ttk.Label(self, text="długość:").grid(column=1, row=1)
+        params = ttk.Frame(self, style="Container.TFrame", padding=5)
+        ttk.Label(params, text="długość:").grid(column=0, row=0)
         ttk.Entry(
-            self,
+            params,
             textvariable=self.controller.desired_length,
             width=10,
             validate="key",
             validatecommand=(self.register(validate_digit), "%S"),
-        ).grid(column=2, row=1, padx=5, pady=5)
+        ).grid(column=1, row=0)
+        params.grid(column=1, row=1, pady=(5, 0))
 
         # --- WYGENEROWANE ZBIORY ---
         self.local_list = WidgetSelectionList(
@@ -85,14 +87,15 @@ class SetsGeneratorWindow(TopLevelABC):
             scrollable=VERTICAL,
             check_all=True,
         )
-        self.local_list.grid(row=0, rowspan=2, column=3, columnspan=2, sticky="nsew")
+        self.local_list.grid(row=0, rowspan=2, column=2, sticky=NSEW)
 
         # --- PRZYCISKI ---
-        ttk.Button(self, text="importuj", command=self.__handle_import_file).grid(column=1, row=2)
-        ttk.Button(self, text="generuj", command=self.__handle_generate_sets).grid(column=2, row=2)
-
-        ttk.Button(self, text="usuń", command=self.local_list.remove_selected).grid(column=3, row=2)
-        ttk.Button(self, text="zapisz", command=self.__handle_save_selected_sets).grid(column=4, row=2)
+        buttons = ttk.Frame(self, style="Container.TFrame", padding=5)
+        buttons.grid_columnconfigure([0, 1, 2], weight=1)
+        ttk.Button(buttons, text="Importuj", command=self.__handle_import_file).grid(column=0, row=0)
+        ttk.Button(buttons, text="Generuj", command=self.__handle_generate_sets).grid(column=1, row=0)
+        ttk.Button(buttons, text="Zapisz", command=self.__handle_save_selected_sets).grid(column=2, row=0)
+        buttons.grid(column=0, columnspan=3, row=2, pady=(5, 0), sticky=EW)
 
     def __handle_import_file(self):
         text_set = self.controller.import_text_set()

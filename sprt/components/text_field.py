@@ -1,11 +1,22 @@
 from tkinter import BOTH, END, INSERT, Text, ttk
 
+from sprt.styles import Color
+
+_TEXT_STYLE = {
+    "background": Color.box_bg,
+    "foreground": "black",
+    "borderwidth": 0,
+    "relief": "flat",
+    "highlightthickness": 0,
+    "insertbackground": Color.dark_font,
+}
+
 
 class TextField(ttk.Frame):
     def __init__(self, master, **kwargs):
-        super().__init__(master)
+        super().__init__(master, style="Container.TFrame", padding=5)
 
-        self.inner = Text(self, **kwargs)
+        self.inner = Text(self, **kwargs, **_TEXT_STYLE)
         self.inner.pack(fill=BOTH, expand=True)
 
         self.bind("<Configure>", self.__adjust_text_entry_size)
