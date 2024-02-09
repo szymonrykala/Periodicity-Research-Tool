@@ -5,7 +5,7 @@ from matplotlib import pyplot
 from .base_chart import BasePlotFrame
 
 
-class PatternOccurencesChart(BasePlotFrame):
+class PatternOccurrencesChart(BasePlotFrame):
     def __init__(self, master, pattern: str, y: list[int]):
         self.y = y
         super().__init__(

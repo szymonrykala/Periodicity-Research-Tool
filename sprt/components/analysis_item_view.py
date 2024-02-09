@@ -1,13 +1,13 @@
 from tkinter import X, ttk
 from typing import Optional
 
-from sprt.analysis.analysis import PeriodicityAnalysys
+from sprt.analysis.analysis import PeriodicityAnalysis
 from sprt.components import SelectableWidget
 from sprt.components.analysis_window import AnalysisWindow
 
 
-class AnalysItemView(SelectableWidget):
-    def _set_up(self, item: PeriodicityAnalysys):
+class AnalysisItemView(SelectableWidget):
+    def _set_up(self, item: PeriodicityAnalysis):
         self.item = item
         self.__opened: Optional[AnalysisWindow] = None
 

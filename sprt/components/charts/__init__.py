@@ -1,3 +1,3 @@
 from .group_chart import GroupChart
 from .histogram import Histogram
-from .results_chart import PatternOccurencesChart
+from .results_chart import PatternOccurrencesChart

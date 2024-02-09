@@ -1,1 +1,1 @@
-from .analysis import AnalysysResult, PeriodicityAnalysys
+from .analysis import AnalysisResult, PeriodicityAnalysis
