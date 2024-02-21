@@ -26,17 +26,17 @@ def _args_builder(func):
 @dataclass
 class Result:
     raw_time: float
-    pattern: ndarray
+    pattern: Optional[ndarray] = None
     time: Optional[float] = None
     value: list[int] = field(default_factory=list)
 
-    def __init__(self, value: list[int], time: float, pattern: ndarray):
+    def __init__(self, time: float, value: list[int] = [], pattern: Optional[ndarray] = None):
         self.value = value
         self.raw_time = time
         self.pattern = pattern
 
-    def refer(self, ref_run):
-        self.time = self.raw_time / ref_run.time
+    def refer(self, ref_run: "Result"):
+        self.time = self.raw_time / ref_run.raw_time
 
 
 @dataclass
@@ -76,7 +76,7 @@ class Algorithm:
         start = time()
         out = self.__main(**arguments)
         end = time()
-        return Result(value=out, time=end - start, pattern=arguments["pattern"])
+        return Result(value=out, time=end - start, pattern=arguments.get("pattern", None))
 
 
 class AlgorithmStore:

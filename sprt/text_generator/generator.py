@@ -39,7 +39,9 @@ class Generator:
 
         def _inner():
             for i in range(1, len(bounds)):
-                yield bounds[i - 1] + (bounds[i] - bounds[i - 1]) / 2  # wyliczanie środka przedziału
+                yield bounds[i - 1] + (
+                    bounds[i] - bounds[i - 1]
+                ) / 2  # wyliczanie środka przedziału
 
         return list(_inner())
 
@@ -53,7 +55,9 @@ class Generator:
         chars_probability, _ = histogram(a=random_samples, bins=len(self._char_set), density=True)
 
         self._char_set.sort()
-        generated_set = array(choices(population=self.char_set, weights=chars_probability.tolist(), k=size))
+        generated_set = array(
+            choices(population=self.char_set, weights=chars_probability.tolist(), k=size)
+        )
 
         logger.info(f"generation finished")
 

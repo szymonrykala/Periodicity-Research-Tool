@@ -1,9 +1,14 @@
-from tkinter import HORIZONTAL, NSEW, ttk
+from threading import Thread
+from tkinter import HORIZONTAL, NSEW, dialog, messagebox, ttk
 
 from sprt.analysis import PeriodicityAnalysis
+from sprt.analysis.time_measure import EnvNotStableError, TimeMeasurement
+from sprt.components.performance_result_window import PerformanceResultWindow
 from sprt.components.selection_list import SelectionList, WidgetSelectionList
+from sprt.logger import logger
 
 from .analysis_item_view import AnalysisItemView
+from .progress_window import ProgressWindow
 
 
 class ResearchPanelController:
@@ -19,6 +24,8 @@ class ResearchPanelController:
         self._algorithms_list = algorithms_list
         self._results_list = results_list
 
+        self.__window = None
+
     def run_analysis(self):
         algorithm = self._algorithms_list.selected
         if algorithm:
@@ -28,11 +35,45 @@ class ResearchPanelController:
                     algorithm=algorithm[0],
                     patterns=sorted(self._patterns_list.selected, key=self.__sort_patterns),
                 )
-                analysis.run()
+                analysis.run_async()
                 self._results_list.append(analysis)
 
     def run_performance_measure(self):
-        raise NotImplementedError("ResearchPanelController.run_performance_measure needs to be implemented")
+        if self.__window and self.__window.winfo_exists():
+            self.__window.focus()
+            return
+        else:
+            self.__window = None
+
+        if not all(
+            (
+                len(self._algorithms_list.selected),
+                len(self._texts_list.selected),
+                len(self._patterns_list.selected),
+            )
+        ):
+            return
+
+        measurement = TimeMeasurement(
+            algorithms=self._algorithms_list.selected,
+            text_sets=self._texts_list.selected,
+            patterns=self._patterns_list.selected,
+        )
+        box = ProgressWindow(measurement.message)
+        box.update()
+        measurement.ready.trace_add("write", lambda *_: box.winfo_exists() and box.stop())
+        measurement.ready.trace_add(
+            "write", lambda *_: self._on_performance_measure_finish(measurement, box)
+        )
+        Thread(target=measurement.run).start()
+
+    def _on_performance_measure_finish(self, measurement: TimeMeasurement, box: ProgressWindow):
+        if not measurement.ready.get() or not measurement.results:
+            return
+        box.destroy()
+        del box
+
+        self.__window = PerformanceResultWindow(measurement.results)
 
     def delete_selected(self):
         self._results_list.remove_selected()
@@ -58,10 +99,14 @@ class ResearchPanel(ttk.LabelFrame):
         self.buttons_frame.grid_rowconfigure([0, 1, 2], weight=1)
         self.buttons_frame.grid(column=0, row=0, sticky=NSEW, padx=(0, 5))
 
-        self.results_list = WidgetSelectionList(self, AnalysisItemView, scrollable=HORIZONTAL, check_all=True)
+        self.results_list = WidgetSelectionList(
+            self, AnalysisItemView, scrollable=HORIZONTAL, check_all=True
+        )
         self.results_list.grid(column=1, columnspan=2, row=0, sticky=NSEW)
 
-        self.controller = ResearchPanelController(text_set_list, patterns_list, algorithms_list, self.results_list)
+        self.controller = ResearchPanelController(
+            text_set_list, patterns_list, algorithms_list, self.results_list
+        )
 
         self.__mount_buttons()
 

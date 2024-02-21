@@ -5,7 +5,7 @@ from tkinter import Toplevel
 from sprt.styles import Color
 
 
-class TopLevelABC(ABC, Toplevel):
+class TopLevelABC(Toplevel):
     def __init__(self, title: str, width: int = 800, height: int = 400):
         super().__init__(background=Color.background)
         self.set_window_size(width, height)

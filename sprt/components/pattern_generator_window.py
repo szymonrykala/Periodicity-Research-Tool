@@ -158,9 +158,15 @@ class PatternGeneratorWindow(TopLevelABC):
 
         buttons = ttk.Frame(self, style="Container.TFrame", padding=(0, 5))
         buttons.grid_columnconfigure([0, 1, 2], weight=1)
-        ttk.Button(buttons, text="Wprowadź", command=self.__handle_manually_add_pattern).grid(column=0, row=0)
-        ttk.Button(buttons, text="Generuj", command=self.__handle_generate_sets).grid(column=1, row=0)
-        ttk.Button(buttons, text="Zapisz", command=self.__handle_save_selected_sets).grid(column=2, row=0)
+        ttk.Button(buttons, text="Wprowadź", command=self.__handle_manually_add_pattern).grid(
+            column=0, row=0
+        )
+        ttk.Button(buttons, text="Generuj", command=self.__handle_generate_sets).grid(
+            column=1, row=0
+        )
+        ttk.Button(buttons, text="Zapisz", command=self.__handle_save_selected_sets).grid(
+            column=2, row=0
+        )
         buttons.grid(column=0, columnspan=5, row=2, sticky=EW, pady=(5, 0))
 
     def __handle_generate_sets(self):
@@ -185,5 +191,7 @@ class PatternGeneratorWindow(TopLevelABC):
         if not pattern:
             return
 
-        self.local_list.append(item=RandomText.from_bytes_or_text(tuple(pattern.encode()), name="użytkownik"))
+        self.local_list.append(
+            item=RandomText.from_bytes_or_text(tuple(pattern.encode()), name="użytkownik")
+        )
         logger.info(f"user pattern added: '{pattern}'")

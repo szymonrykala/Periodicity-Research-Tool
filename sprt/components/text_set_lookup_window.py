@@ -53,7 +53,9 @@ class TextSetWindow(TopLevelABC):
             label.configure(padding=5)
             label.pack(fill=X)
 
-        self.charset_label = ttk.Label(frame, text=f"Wykorzystany zbiór znaków: {text.parsed_charset}", padding=5)
+        self.charset_label = ttk.Label(
+            frame, text=f"Wykorzystany zbiór znaków: {text.parsed_charset}", padding=5
+        )
         self.charset_label.pack(fill=X, ipadx=5)
 
         Histogram(frame, x=text.charset, y=text.density_matrix).pack(fill=X, expand=True, pady=5)
@@ -63,6 +65,7 @@ class TextSetWindow(TopLevelABC):
 
         frame.bind("<Configure>", self.__resize_label, add="+")
 
+    # TODO: change to ActiveLabel
     def __resize_label(self, event):
         if self.__i % 5 == 0:
             self.charset_label.configure(wraplength=event.width)

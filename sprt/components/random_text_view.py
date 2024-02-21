@@ -13,7 +13,9 @@ from sprt.text_generator import RandomText
 
 _ICON_SIZE = 17
 
-_eye_icon = Image.open(STATIC_DIR + "eye.png").resize((_ICON_SIZE + round(_ICON_SIZE / 4), _ICON_SIZE))
+_eye_icon = Image.open(STATIC_DIR + "eye.png").resize(
+    (_ICON_SIZE + round(_ICON_SIZE / 4), _ICON_SIZE)
+)
 _edit_icon = Image.open(STATIC_DIR + "edit.png").resize((_ICON_SIZE, _ICON_SIZE))
 
 

@@ -43,18 +43,18 @@ class RandomTextDatabase(Database):
             exec.map(_job, map(lambda v: v[0], resp))
 
     def insert(self, item: RandomText) -> None:
-        logger.info(f"saving to database '{item.name}' '{item.id}' text set")
+        logger.debug(f"saving to database '{item.name}' '{item.id}' text set")
         self._run(
             "INSERT INTO {table}(id, data) VALUES(:id, :data)",
             {"id": str(item.id), "data": item.to_json()},
         )
 
     def delete(self, item: RandomText) -> None:
-        logger.info(f"deleting '{item.id}' text set from database")
+        logger.debug(f"deleting '{item.id}' text set from database")
         self._run("DELETE FROM {table} WHERE id=:id", {"id": str(item.id)})
 
     def update(self, item: RandomText) -> None:
-        logger.info(f"Updating '{item.id}' text set to database")
+        logger.debug(f"Updating '{item.id}' text set to database")
         self._run(
             "UPDATE {table} SET data=:data WHERE id=:id",
             {"id": str(item.id), "data": item.to_json()},

@@ -3,7 +3,9 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from functools import cached_property
 from threading import Thread
+from time import time
 from tkinter import BooleanVar
+from typing import Iterable
 
 from sprt.algorithms.algorithm import Algorithm, Result
 from sprt.logger import logger
@@ -38,7 +40,7 @@ class PeriodicityAnalysis:
     def algorithm(self):
         return self.__algorithm.name
 
-    @property
+    @cached_property
     def patterns_count(self):
         return len(self.__patterns)
 
@@ -47,7 +49,6 @@ class PeriodicityAnalysis:
         return hash((self.algorithm, self.__text_set.id, map(lambda v: v.id, self.__patterns)))
 
     def __find_indexes(self, pattern: RandomText) -> Result:
-        print(pattern)
         return self.__algorithm.run(text=self.__text_set.text, pattern=pattern.text)
 
     def __count_occurrences_offsets(self, indexes: list[int]) -> list[int]:
@@ -66,7 +67,7 @@ class PeriodicityAnalysis:
 
         return list(_job())
 
-    def __count_index_offset_groups(self, offsets: list[int]):
+    def __count_index_offset_groups(self, offsets: Iterable[int]):
         return dict(
             sorted(
                 Counter(offsets).items(),
@@ -74,7 +75,7 @@ class PeriodicityAnalysis:
             )
         )
 
-    def _patterns_occurrences_job(self, pattern: RandomText):
+    def _pattern_occurrences_job(self, pattern: RandomText):
         result = self.__find_indexes(pattern)
 
         offsets = self.__count_occurrences_offsets(result.value)
@@ -83,18 +84,26 @@ class PeriodicityAnalysis:
             index_offset=offsets,
             index_offset_groups=self.__count_index_offset_groups(offsets),
         )
-        logger.info(f"job for pattern '{pattern.parsed_text}' done")
+        logger.debug(f"job for pattern '{pattern.parsed_text}' done")
         return analysis
 
     def patterns_occurrences(self):
         with ThreadPoolExecutor(4) as exec:
-            jobs = exec.map(self._patterns_occurrences_job, self.__patterns)
+            jobs = exec.map(self._pattern_occurrences_job, self.__patterns)
             self.results = list(jobs)
 
         logger.info(f"async analysis with '{self.__algorithm}' for '{self.__text_set.name}' DONE")
         self.ready.set(True)
 
-    def run(self):
-        """starts async analysis"""
+    def run_async(self):
+        """Starts async analysis."""
         logger.info(f"START async analysis with '{self.__algorithm}' for '{self.__text_set.name}'")
         Thread(target=self.patterns_occurrences).start()
+
+    def measure_single_pattern_run(self, pattern: RandomText) -> float:
+        """
+        This version is used for performance analysis.
+        """
+        start = time()
+        self._pattern_occurrences_job(pattern)
+        return time() - start

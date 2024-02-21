@@ -92,9 +92,15 @@ class SetsGeneratorWindow(TopLevelABC):
         # --- PRZYCISKI ---
         buttons = ttk.Frame(self, style="Container.TFrame", padding=5)
         buttons.grid_columnconfigure([0, 1, 2], weight=1)
-        ttk.Button(buttons, text="Importuj", command=self.__handle_import_file).grid(column=0, row=0)
-        ttk.Button(buttons, text="Generuj", command=self.__handle_generate_sets).grid(column=1, row=0)
-        ttk.Button(buttons, text="Zapisz", command=self.__handle_save_selected_sets).grid(column=2, row=0)
+        ttk.Button(buttons, text="Importuj", command=self.__handle_import_file).grid(
+            column=0, row=0
+        )
+        ttk.Button(buttons, text="Generuj", command=self.__handle_generate_sets).grid(
+            column=1, row=0
+        )
+        ttk.Button(buttons, text="Zapisz", command=self.__handle_save_selected_sets).grid(
+            column=2, row=0
+        )
         buttons.grid(column=0, columnspan=3, row=2, pady=(5, 0), sticky=EW)
 
     def __handle_import_file(self):

@@ -88,7 +88,7 @@ class MainWindow(ttk.Frame):
         self.algorithms = SelectionList(
             l2,
             list_items=algorithm_store.algorithms_dict,
-            single_select=True,
+            # single_select=True,
         )
         self.algorithms.pack(fill=BOTH, expand=True)
         l2.grid(column=1, row=0, sticky="NSEW", padx=(0, 5))
@@ -110,8 +110,12 @@ class MainWindow(ttk.Frame):
         buttons.grid_columnconfigure([0, 2], weight=2)
         buttons.grid_columnconfigure(1, weight=1)
 
-        ttk.Button(buttons, text="dodaj zbiory", command=self.__show_text_set_generator_window).grid(column=0, row=0)
-        ttk.Button(buttons, text="dodaj wzorce", command=self.__show_pattern_generator_window).grid(column=2, row=0)
+        ttk.Button(
+            buttons, text="dodaj zbiory", command=self.__show_text_set_generator_window
+        ).grid(column=0, row=0)
+        ttk.Button(buttons, text="dodaj wzorce", command=self.__show_pattern_generator_window).grid(
+            column=2, row=0
+        )
         buttons.grid(column=0, columnspan=3, row=1, sticky=EW, pady=5)
 
         # --- PANEL BADAŃ ---

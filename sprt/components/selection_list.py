@@ -17,7 +17,9 @@ class SelectableWidget(ABC, ttk.Frame):
         }
         opt.update(**kwargs)
         super().__init__(master, **opt)
-        self._checkbox = Checkbox(self, text=text, onvalue=item, offvalue=None, command=self.__handle_toggle)
+        self._checkbox = Checkbox(
+            self, text=text, onvalue=item, offvalue=None, command=self.__handle_toggle
+        )
         self._set_up(item)
         self.__initial_style = self.cget("style")
 

@@ -97,7 +97,9 @@ class RandomText:
 
         if len(self.density_matrix) == 0:
             probability = {k: v / self.length for k, v in Counter(self.text.tolist()).items()}
-            self.density_matrix = array(tuple({char: probability.get(char, 0) for char in self.charset}.values()))
+            self.density_matrix = array(
+                tuple({char: probability.get(char, 0) for char in self.charset}.values())
+            )
             i += 1
 
         if self.stdev is None:

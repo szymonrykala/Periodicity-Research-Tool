@@ -39,9 +39,9 @@ class AnalysisWindow(TopLevelABC):
         for result in analysis.results:
             pattern_str = bytes_to_str(result.algorithm.pattern)
             if result.index_offset:
-                PatternOccurrencesChart(
-                    frame, pattern=pattern_str, y=result.algorithm.value
-                ).pack(fill=X)
+                PatternOccurrencesChart(frame, pattern=pattern_str, y=result.algorithm.value).pack(
+                    fill=X
+                )
 
                 PatternIndexOffsetGroupsChart(
                     frame,
@@ -54,5 +54,5 @@ class AnalysisWindow(TopLevelABC):
                     frame,
                     text=f"Brak wystąpień dla wzorca: {pattern_str}",
                     padding=5,
-                    justify="center"
+                    justify="center",
                 ).pack(fill=X, expand=True, anchor="center", ipadx=5, pady=5)

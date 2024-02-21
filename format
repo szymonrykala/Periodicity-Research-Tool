@@ -1,0 +1,3 @@
+#!/bin/bash
+python3 -m black -l 100 ./sprt
+python3 -m isort --profile black ./sprt

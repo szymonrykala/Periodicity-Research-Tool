@@ -17,9 +17,15 @@ class AnalysisItemView(SelectableWidget):
         self.checkbox.configure(text=item.name)
 
         ttk.Label(self, text=f"alg: {item.algorithm}", padding=(5, 5, 5, 0)).pack(fill=X)
-        ttk.Label(self, text=f"ilość wzorców: {item.patterns_count}", padding=(5, 0, 5, 0)).pack(fill=X)
-        self.__state_label = ttk.Label(self, text="przetwarzanie", foreground="red", padding=(5, 0, 5, 5))
-        self.button = ttk.Button(self, text="Otwórz", command=self.__handle_open, state="disabled", padding=0)
+        ttk.Label(self, text=f"ilość wzorców: {item.patterns_count}", padding=(5, 0, 5, 0)).pack(
+            fill=X
+        )
+        self.__state_label = ttk.Label(
+            self, text="przetwarzanie", foreground="red", padding=(5, 0, 5, 5)
+        )
+        self.button = ttk.Button(
+            self, text="Otwórz", command=self.__handle_open, state="disabled", padding=0
+        )
 
         ttk.Separator(self).pack(fill=X)
         self.__state_label.pack(fill=X, ipadx=5)
