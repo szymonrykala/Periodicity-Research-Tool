@@ -5,9 +5,7 @@ from time import time
 from tkinter import BooleanVar, StringVar
 from typing import Dict, Iterable, Optional
 
-from numpy import ndarray
-
-from sprt.algorithms import Algorithm, AlgorithmStore, Result
+from sprt.algorithms import Algorithm, AlgorithmStore
 from sprt.analysis.analysis import PeriodicityAnalysis
 from sprt.config import (
     ENV_STABLE_WAIT_TIME,
@@ -124,9 +122,12 @@ class TimeMeasurement:
         return self.__env_ref_algorithm_time
 
     def __get_reference_measure(self) -> tuple[float, float]:
-        measured_times = [
-            self.__env_ref_algorithm.run().raw_time for _ in range(0, TIME_MEASURE_MEAN_COUNT)
-        ]
+        def _measure():
+            start = time()
+            self.__env_ref_algorithm.run()
+            return time() - start
+
+        measured_times = [_measure() for _ in range(0, TIME_MEASURE_MEAN_COUNT)]
         return mean(measured_times), stdev(measured_times)
 
     def _is_environment_stable(self):
@@ -189,6 +190,3 @@ class TimeMeasurement:
             logger.info("Pomiar wydajności algorytmów zakończony")
             self.message.set("Pomiary działania zakończone")
             self.ready.set(True)
-
-
-# TODO: Sprawdzić czy klasa Results wgl jest potrzebna przez aplikację w takim kształcie jak teraz

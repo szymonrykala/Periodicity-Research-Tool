@@ -1,4 +1,3 @@
-from threading import Thread
 from tkinter import StringVar, X, ttk
 
 from .top_level_abc import TopLevelABC

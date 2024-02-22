@@ -1,6 +1,6 @@
 from tkinter import HORIZONTAL, NSEW, VERTICAL, Canvas, ttk
 
-from sprt.styles import Color
+from sprt.theme import Color
 
 _CANVAS_STYLE = {
     "background": Color.box_bg,
@@ -33,8 +33,6 @@ class ScrollableFrame(ttk.Frame):
 
         # Create a frame to hold the widgets
         self.inner_frame = ttk.Frame(self.__canvas, style=kwargs.get("style", "TFrame"))
-        # self.inner_frame.grid_rowconfigure(0, weight=1)
-        # self.inner_frame.grid_columnconfigure(0, weight=1)
         self.__holder = self.__canvas.create_window((0, 0), window=self.inner_frame)
 
         # Bind events to update the scroll region

@@ -1,6 +1,6 @@
 from tkinter import BOTH, END, INSERT, Text, ttk
 
-from sprt.styles import Color
+from sprt.theme import Color
 
 _TEXT_STYLE = {
     "background": Color.box_bg,

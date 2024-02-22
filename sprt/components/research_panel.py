@@ -1,11 +1,10 @@
 from threading import Thread
-from tkinter import HORIZONTAL, NSEW, dialog, messagebox, ttk
+from tkinter import HORIZONTAL, NSEW, messagebox, ttk
 
 from sprt.analysis import PeriodicityAnalysis
-from sprt.analysis.time_measure import EnvNotStableError, TimeMeasurement
+from sprt.analysis.time_measure import TimeMeasurement
 from sprt.components.performance_result_window import PerformanceResultWindow
 from sprt.components.selection_list import SelectionList, WidgetSelectionList
-from sprt.logger import logger
 
 from .analysis_item_view import AnalysisItemView
 from .progress_window import ProgressWindow
@@ -26,17 +25,33 @@ class ResearchPanelController:
 
         self.__window = None
 
+    def __all_present(self) -> bool:
+        return all(
+            map(
+                len,
+                [
+                    self._algorithms_list.selected,
+                    self._texts_list.selected,
+                    self._patterns_list.selected,
+                ],
+            )
+        )
+
     def run_analysis(self):
         algorithm = self._algorithms_list.selected
-        if algorithm:
-            for text_set in self._texts_list.selected:
-                analysis = PeriodicityAnalysis(
-                    text_set=text_set,
-                    algorithm=algorithm[0],
-                    patterns=sorted(self._patterns_list.selected, key=self.__sort_patterns),
-                )
-                analysis.run_async()
-                self._results_list.append(analysis)
+
+        if not self.__all_present():
+            messagebox.showinfo(message="Wybierz co najmniej jeden wzorzec, zbiór i algorytm.")
+            return
+
+        for text_set in self._texts_list.selected:
+            analysis = PeriodicityAnalysis(
+                text_set=text_set,
+                algorithm=algorithm[0],
+                patterns=sorted(self._patterns_list.selected, key=self.__sort_patterns),
+            )
+            analysis.run_async()
+            self._results_list.append(analysis)
 
     def run_performance_measure(self):
         if self.__window and self.__window.winfo_exists():
@@ -45,13 +60,8 @@ class ResearchPanelController:
         else:
             self.__window = None
 
-        if not all(
-            (
-                len(self._algorithms_list.selected),
-                len(self._texts_list.selected),
-                len(self._patterns_list.selected),
-            )
-        ):
+        if not self.__all_present():
+            messagebox.showinfo(message="Wybierz co najmniej jeden wzorzec, zbiór i algorytm.")
             return
 
         measurement = TimeMeasurement(

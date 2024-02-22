@@ -53,23 +53,15 @@ class TextSetWindow(TopLevelABC):
             label.configure(padding=5)
             label.pack(fill=X)
 
-        self.charset_label = ttk.Label(
-            frame, text=f"Wykorzystany zbiór znaków: {text.parsed_charset}", padding=5
-        )
-        self.charset_label.pack(fill=X, ipadx=5)
+        ttk.Label(frame, text=f"Wykorzystany zbiór znaków: ", padding=5).pack(fill=X, ipadx=5)
+        f = TextField(frame, height=7)
+        f.value = text.parsed_charset
+        f.pack(fill=X, ipadx=5)
 
         Histogram(frame, x=text.charset, y=text.density_matrix).pack(fill=X, expand=True, pady=5)
 
         self.pack_text_view(frame, text)
         self.pack_group_charts(frame)
-
-        frame.bind("<Configure>", self.__resize_label, add="+")
-
-    # TODO: change to ActiveLabel
-    def __resize_label(self, event):
-        if self.__i % 5 == 0:
-            self.charset_label.configure(wraplength=event.width)
-        self.__i += 1
 
     def pack_group_charts(self, frame):
         with ThreadPoolExecutor() as exec:
@@ -81,7 +73,7 @@ class TextSetWindow(TopLevelABC):
                 GroupChart(frame, group_size=i, data=data).pack(fill=X, pady=5)
 
     def pack_text_view(self, frame, text: RandomText):
-        field = TextField(frame)
+        field = TextField(frame, height=(6 if text.length < 1_000 else 12))
         content: str
 
         if text.length > 3_000:

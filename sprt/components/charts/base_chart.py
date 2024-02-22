@@ -32,9 +32,6 @@ class BasePlotFrame(ABC, ttk.Frame):
             padding=0,
         ).grid(row=0, column=0, sticky=NE)
 
-        # self.master.after(500, lambda: self.bind("<Configure>", self.resize))
-        # self._resize_counter = 0
-
     @property
     def ax(self) -> Axes:
         return self._ax
@@ -48,10 +45,8 @@ class BasePlotFrame(ABC, ttk.Frame):
         self.__render_img()
         pyplot.close(self.fig)
 
-    def set_integer_axis(self):
-        self.ax.locator_params(axis="both", integer=True, tight=True)
-        # for axis in [self.ax.xaxis, self.ax.yaxis]:
-        # axis.set_major_locator(ticker.MaxNLocator(integer=True))
+    def set_integer_axis(self, ax: str = "both"):
+        self.ax.locator_params(axis=ax, integer=True, tight=True)  # type: ignore
 
     def __create_figure(self):
         fig, ax = pyplot.subplots(squeeze=True)
@@ -76,15 +71,6 @@ class BasePlotFrame(ABC, ttk.Frame):
         self.__img.resize(size=(self.winfo_height(), self.winfo_width()))
         self.img_tk = ImageTk.PhotoImage(self.__img)
         self.__img_canvas.configure(image=self.img_tk)
-
-    # def resize(self, event):
-    #     if self.__img and self._resize_counter % 10 == 0:
-    #         print(event)
-    #         img = self.__img.resize(size=(event.width, event.height))
-    #         img_tk = ImageTk.PhotoImage(img)
-    #         self.__img_canvas.configure(image=img_tk)
-    #         self.__img_canvas.image = img_tk
-    #     self._resize_counter += 1
 
     @abstractmethod
     def _draw(self):

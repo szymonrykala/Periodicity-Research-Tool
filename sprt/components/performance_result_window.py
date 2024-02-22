@@ -29,7 +29,7 @@ class PerformanceResultWindow(TopLevelABC):
         ).pack(fill=X, ipadx=5)
 
         ttk.Button(
-            frame, text="Eksportuj dane pomiarowe", command=self.__dump_to_csv, padding=5
+            frame, text="Eksportuj dane pomiarowe do CSV", command=self.__dump_to_csv, padding=5
         ).pack(expand=True, fill=X)
 
         for algorithm, results in measurement_results.data.items():
@@ -65,6 +65,7 @@ class PerformanceResultWindow(TopLevelABC):
                     self.measurements.patterns_length, measurements.time, measurements.stdev
                 ):
                     dump.writerow([pattern_len, alg_name, text_set_name, time, dev])
+        file.close()
 
         logger.info("Dump time measurements to CSV succeeded")
         messagebox.showinfo("Sukces", "Plik został zapisany!")

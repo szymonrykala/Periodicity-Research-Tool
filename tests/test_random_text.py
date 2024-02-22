@@ -103,7 +103,7 @@ def test_random_text_from_bytes_or_string(data):
     else:
         assert text.charset.tolist() == list(sorted(set(data)))
 
-    assert text.mean is None
+    assert isinstance(text.mean, float)
     assert isinstance(text.stdev, float)
     assert text.length == len(data)
 

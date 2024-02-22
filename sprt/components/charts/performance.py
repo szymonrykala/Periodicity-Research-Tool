@@ -27,6 +27,7 @@ class AlgorithmTimePerTextSetChart(BasePlotFrame):
         self.render_chart()
 
     def _draw(self):
+        self.set_integer_axis("x")
         self.ax.set_ymargin(0.3)
         for text_set, results in self.ys.items():
             self.ax.errorbar(x=self.x, y=results.time, yerr=results.stdev, label=f"{text_set}")
@@ -54,6 +55,7 @@ class TextSetPerAlgorithmTimeChart(BasePlotFrame):
         self.render_chart()
 
     def _draw(self):
+        self.set_integer_axis("x")
         self.ax.set_ymargin(0.4)
 
         for alg_name, results in self.ys.items():

@@ -5,7 +5,7 @@ from matplotlib import pyplot
 from sprt.components.main_window import MainWindow
 from sprt.components.top_level_abc import TopLevelABC
 from sprt.config import STATIC_DIR
-from sprt.styles import Color
+from sprt.theme import Color
 
 
 class App:

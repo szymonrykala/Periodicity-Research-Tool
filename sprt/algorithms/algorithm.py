@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from functools import cached_property, wraps
 from importlib import import_module
-from time import time
 from typing import Callable, Optional
 
 from numpy import ndarray
@@ -72,11 +71,8 @@ class Algorithm:
         return self.name
 
     @_args_builder
-    def run(self, **arguments: ndarray) -> Result:
-        start = time()
-        out = self.__main(**arguments)
-        end = time()
-        return Result(value=out, time=end - start, pattern=arguments.get("pattern", None))
+    def run(self, **arguments: ndarray) -> list[int]:
+        return self.__main(**arguments)
 
 
 class AlgorithmStore:

@@ -1,7 +1,5 @@
-from itertools import repeat
-from random import choices, shuffle
+from random import choices
 
-from matplotlib import pyplot
 from numpy import array, histogram, ndarray
 
 from sprt.config import DEFAULT_CHARSET, SINGLE_CHAR_SAMPLES_COUNT

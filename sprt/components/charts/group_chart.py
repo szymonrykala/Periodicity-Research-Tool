@@ -18,4 +18,3 @@ class GroupChart(BasePlotFrame):
         x = list(self._data.keys())  # ilość wystąpień
         y = [len(v) for v in self._data.values()]  # grupy które wystąpły daną ilość razy
         self.ax.stem(x, y, "g")
-        # self.ax.stem(x, y, width=0.5, color="g")

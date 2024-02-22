@@ -2,10 +2,10 @@ from abc import ABC
 from random import randint
 from tkinter import Toplevel
 
-from sprt.styles import Color
+from sprt.theme import Color
 
 
-class TopLevelABC(Toplevel):
+class TopLevelABC(ABC, Toplevel):
     def __init__(self, title: str, width: int = 800, height: int = 400):
         super().__init__(background=Color.background)
         self.set_window_size(width, height)

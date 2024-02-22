@@ -7,14 +7,15 @@ from time import time
 from tkinter import BooleanVar
 from typing import Iterable
 
-from sprt.algorithms.algorithm import Algorithm, Result
+from sprt.algorithms.algorithm import Algorithm
 from sprt.logger import logger
 from sprt.text_generator.random_text import RandomText
 
 
 @dataclass
 class AnalysisResult:
-    algorithm: Result
+    indexes: list[int]
+    pattern: RandomText
     index_offset: list[int]
     index_offset_groups: dict[int, int]
 
@@ -48,7 +49,7 @@ class PeriodicityAnalysis:
     def hash(self):
         return hash((self.algorithm, self.__text_set.id, map(lambda v: v.id, self.__patterns)))
 
-    def __find_indexes(self, pattern: RandomText) -> Result:
+    def __find_indexes(self, pattern: RandomText) -> list[int]:
         return self.__algorithm.run(text=self.__text_set.text, pattern=pattern.text)
 
     def __count_occurrences_offsets(self, indexes: list[int]) -> list[int]:
@@ -78,9 +79,10 @@ class PeriodicityAnalysis:
     def _pattern_occurrences_job(self, pattern: RandomText):
         result = self.__find_indexes(pattern)
 
-        offsets = self.__count_occurrences_offsets(result.value)
+        offsets = self.__count_occurrences_offsets(result)
         analysis = AnalysisResult(
-            algorithm=result,
+            indexes=result,
+            pattern=pattern,
             index_offset=offsets,
             index_offset_groups=self.__count_index_offset_groups(offsets),
         )
