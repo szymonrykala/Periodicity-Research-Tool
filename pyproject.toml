@@ -1,0 +1,23 @@
+[tool.poetry]
+authors = ["Szymon Rykała <szymonrykala@gmail.com>"]
+description = ""
+name = "SPRT"
+packages = [{include = "sprt"}]
+readme = "README.md"
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+numpy = "2.2.1"
+python = "3.12.*"
+matplotlib = "3.10.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "24.10.0"
+isort = "5.13.2"
+pytest = "8.3.4"
+pyinstaller = "6.11.1"
+mock = "5.1.0"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
