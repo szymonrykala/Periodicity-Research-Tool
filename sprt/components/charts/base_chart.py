@@ -73,5 +73,4 @@ class BasePlotFrame(ABC, ttk.Frame):
         self.__img_canvas.configure(image=self.img_tk)
 
     @abstractmethod
-    def _draw(self):
-        ...
+    def _draw(self): ...

@@ -21,7 +21,7 @@ class AlgorithmTimePerTextSetChart(BasePlotFrame):
             master=master,
             title=f"Średni czas wykonania algorytmu na bazie '{algorithm}' dla zbiorów",
             xlabel="długość wzorca",
-            ylabel="czas wykonania [s]",
+            ylabel="znormalizowany czas wykonania",
         )
 
         self.render_chart()
@@ -30,12 +30,12 @@ class AlgorithmTimePerTextSetChart(BasePlotFrame):
         self.set_integer_axis("x")
         self.ax.set_ymargin(0.3)
         for text_set, results in self.ys.items():
-            self.ax.errorbar(x=self.x, y=results.time, yerr=results.stdev, label=f"{text_set}")
+            self.ax.plot(self.x, results.time, label=f"{text_set}", mouseover=True)
 
             if DISPLAY_TREND_LINES:
                 z = polyfit(self.x, results.time, 2)
                 p = poly1d(z)
-                self.ax.plot(self.x, p(self.x), label=f"{text_set}")
+                self.ax.plot(self.x, p(self.x), "--", label=f"{text_set}")
 
         self.ax.legend()
 
@@ -49,7 +49,7 @@ class TextSetPerAlgorithmTimeChart(BasePlotFrame):
             master=master,
             title=f"Średni czas wykonania algorytmów dla zbioru '{text_set_name}'",
             xlabel="długość wzorca",
-            ylabel="czas wykonania [s]",
+            ylabel="znormalizowany czas wykonania",
         )
 
         self.render_chart()
@@ -59,11 +59,11 @@ class TextSetPerAlgorithmTimeChart(BasePlotFrame):
         self.ax.set_ymargin(0.4)
 
         for alg_name, results in self.ys.items():
-            self.ax.errorbar(x=self.x, y=results.time, yerr=results.stdev, label=alg_name)
+            self.ax.plot(self.x, results.time, label=alg_name, mouseover=True)
 
             if DISPLAY_TREND_LINES:
                 z = polyfit(self.x, results.time, 2)
                 p = poly1d(z)
-                self.ax.plot(self.x, p(self.x), label=alg_name)
+                self.ax.plot(self.x, p(self.x), "--", label=alg_name)
 
         self.ax.legend()

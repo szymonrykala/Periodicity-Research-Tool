@@ -25,7 +25,21 @@ class ResearchPanelController:
 
         self.__window = None
 
-    def __all_present(self) -> bool:
+    def __all_present_for_analysis(self) -> bool:
+        return (
+            all(
+                map(
+                    len,
+                    [
+                        self._texts_list.selected,
+                        self._patterns_list.selected,
+                    ],
+                )
+            )
+            and len(self._algorithms_list.selected) == 1
+        )
+
+    def __all_present_for_performance_test(self) -> bool:
         return all(
             map(
                 len,
@@ -40,8 +54,10 @@ class ResearchPanelController:
     def run_analysis(self):
         algorithm = self._algorithms_list.selected
 
-        if not self.__all_present():
-            messagebox.showinfo(message="Wybierz co najmniej jeden wzorzec, zbiór i algorytm.")
+        if not self.__all_present_for_analysis():
+            messagebox.showinfo(
+                message="Wybierz co najmniej jeden wzorzec, zbiór i dokładnie jeden algorytm."
+            )
             return
 
         for text_set in self._texts_list.selected:
@@ -60,7 +76,7 @@ class ResearchPanelController:
         else:
             self.__window = None
 
-        if not self.__all_present():
+        if not self.__all_present_for_performance_test():
             messagebox.showinfo(message="Wybierz co najmniej jeden wzorzec, zbiór i algorytm.")
             return
 

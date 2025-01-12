@@ -29,7 +29,7 @@ class PatternTextView(SelectableWidget):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        self.checkbox.configure(text=f"{item.name}; l={item.length}")
+        self.checkbox.configure(text=f"l={item.length}; {self.pattern.parsed_text}")
         self.checkbox.grid(row=0, column=0, sticky="we")
 
         self.eye_icon_label = ttk.Label(

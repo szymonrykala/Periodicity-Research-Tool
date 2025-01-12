@@ -9,7 +9,7 @@ from sprt.logger import logger
 from sprt.text_generator import Distribution
 from sprt.text_generator import Generator as TextGenerator
 from sprt.text_generator import RandomText, distributions_dict
-from sprt.utils import validate_digit
+from sprt.utils import validate_digit_input
 
 from .distributionView import DistributionView
 from .random_text_view import PatternTextView
@@ -52,7 +52,7 @@ class PatternParameters(ttk.Frame):
             ttk.Entry(
                 self,
                 textvariable=var,
-                validatecommand=(self.register(validate_digit), "%S"),
+                validatecommand=(self.register(validate_digit_input), "%S"),
                 validate="key",
                 width=4,
             ).grid(row=1, column=i + 1, sticky="WE")
@@ -62,7 +62,7 @@ class PatternParameters(ttk.Frame):
         ttk.Entry(
             self,
             textvariable=self.controller.repetitions_var,
-            validatecommand=(self.register(validate_digit), "%S"),
+            validatecommand=(self.register(validate_digit_input), "%S"),
             validate="key",
             width=3,
         ).grid(row=2, column=4, columnspan=2, sticky="WE")

@@ -37,8 +37,7 @@ class SelectableWidget(ABC, ttk.Frame):
         else:
             self._on_deselect()
 
-    def _on_select(self):
-        ...
+    def _on_select(self): ...
 
     def _on_deselect(self):
         self.configure(style=self.__initial_style)  # revert the style
@@ -50,8 +49,7 @@ class SelectableWidget(ABC, ttk.Frame):
         return self.checkbox.deselect()
 
     @abstractmethod
-    def _set_up(self, item: Any):
-        ...
+    def _set_up(self, item: Any): ...
 
 
 class SelectionListController:

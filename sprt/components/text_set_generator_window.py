@@ -8,7 +8,7 @@ from sprt.components.distributionView import DistributionView
 from sprt.components.top_level_abc import TopLevelABC
 from sprt.logger import logger
 from sprt.text_generator import Distribution, Generator, RandomText, distributions_dict
-from sprt.utils import validate_digit
+from sprt.utils import validate_digit_input
 
 from .random_text_view import GeneratedRandomTextView
 
@@ -76,7 +76,7 @@ class SetsGeneratorWindow(TopLevelABC):
             textvariable=self.controller.desired_length,
             width=10,
             validate="key",
-            validatecommand=(self.register(validate_digit), "%S"),
+            validatecommand=(self.register(validate_digit_input), "%S"),
         ).grid(column=1, row=0)
         params.grid(column=1, row=1, pady=(5, 0))
 

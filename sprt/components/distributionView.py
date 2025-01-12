@@ -4,13 +4,13 @@ from typing import Any, Optional
 from sprt.components import SelectableWidget
 from sprt.logger import logger
 from sprt.text_generator import Distribution
-from sprt.utils import validate_digit
+from sprt.utils import validate_digit_input
 
 
 class DistributionViewController:
     def __init__(self, distribution: type[Distribution]):
         self.distribution = distribution
-        self.params = {k: DoubleVar(value=1.0) for k in self.distribution.parameters.keys()}
+        self.params = {k: DoubleVar(value=10.0) for k in self.distribution.parameters.keys()}
 
     def get_value(self) -> Distribution:
         params = {k: val.get() for k, val in self.params.items()}
@@ -40,7 +40,7 @@ class DistributionView(SelectableWidget):
             ttk.Entry(
                 self,
                 textvariable=var,
-                validatecommand=(self.register(validate_digit), "%S"),
+                validatecommand=(self.register(validate_digit_input), "%S"),
                 validate="key",
                 width=8,
             ).grid(column=1, row=i, sticky="we")
