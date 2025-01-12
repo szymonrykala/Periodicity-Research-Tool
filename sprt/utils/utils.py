@@ -1,5 +1,3 @@
-from tkinter import Toplevel
-
 from numpy import ndarray
 
 
@@ -16,5 +14,5 @@ def bytes_to_str(value: list | ndarray | str) -> str:
         return str(b)
 
 
-def validate_digit(value: str):
+def validate_digit_input(value: str) -> bool:
     return value.isdigit() or value in "."
