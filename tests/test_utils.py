@@ -1,33 +1,35 @@
 import pytest
-from numpy import array, ndarray
-
-from sprt.utils import bytes_to_str, validate_digit
+import numpy as np
+from sprt.utils import bytes_to_str, validate_digit_input
 
 
 @pytest.mark.parametrize(
-    "data,expected",
+    "input_value, expected_output",
     [
-        ("test string", "test string"),
-        ([48, 49, 50, 51, 52, 53, 54], "0123456"),
-        (array([48, 49, 50, 51, 52, 53, 54]), "0123456"),
+        ([97, 98, 99], "abc"),
+        (np.array([97, 98, 99]), "abc"),
+        (b"abc", "abc"),
+        ("abc", "abc"),
+        ([255], str(b"\xff")),
+        ([128, 129], str(b"\x80\x81")),
+        ([], ""),
+        (np.array([]), ""),
     ],
 )
-def test_bytes_to_str_parsing(data: list | ndarray | str, expected: str):
-    out_str = bytes_to_str(data)
-    assert isinstance(out_str, str)
-    assert out_str == expected
+def test_bytes_to_str(input_value, expected_output):
+    assert bytes_to_str(input_value) == expected_output
 
 
 @pytest.mark.parametrize(
-    "value,result",
+    "input_value, expected_output",
     [
-        ("1", True),
+        ("123", True),
+        ("12.3", False),
         (".", True),
-        ("1,1", False),
-        ("1df", False),
-        ("df1", False),
-        ("df", False),
+        ("abc", False),
+        ("12a", False),
+        ("", True),
     ],
 )
-def test_validate_is_digit(value, result):
-    assert validate_digit(value) == result
+def test_validate_digit(input_value, expected_output):
+    assert validate_digit_input(input_value) == expected_output
