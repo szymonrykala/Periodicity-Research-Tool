@@ -6,6 +6,9 @@ def main(*, pattern: list, text: list):
     pattern_length = len(pattern)
     text_length = len(text)
 
+    if pattern_length == 0 or text_length == 0 or pattern_length > text_length:
+        return []
+
     # create lps[] that will hold the longest prefix suffix
     lps = [0] * pattern_length
     j = 0  # pattern index

@@ -10,10 +10,6 @@ from .random_text import RandomText
 
 
 class Generator:
-    """
-    TODO: czy wykres powinien się przesuwać pod wpływem średniej??, nie do końca reaguje na stdev
-    """
-
     def __init__(self) -> None:
         self._char_set: ndarray = array(tuple(set(DEFAULT_CHARSET.encode())))
 
@@ -26,31 +22,19 @@ class Generator:
         if isinstance(value, str):
             value = value.encode()
 
+        if len(array(tuple(set(value)))) == 0:
+            raise ValueError("Charset should not be empty")
+
         self._char_set = array(tuple(set(value)))
         logger.info(f"Charset updated to {self._char_set}")
-
-    def __bounds_centers(self, bounds: list) -> list[float]:
-        """calcuates centers of given bounds
-        >>> __bounds_centers([1, 3, 5, 7])
-        >>> [2, 4, 6]
-        """
-
-        def _inner():
-            for i in range(1, len(bounds)):
-                yield bounds[i - 1] + (
-                    bounds[i] - bounds[i - 1]
-                ) / 2  # wyliczanie środka przedziału
-
-        return list(_inner())
 
     def generate(self, size: int, distrib: Distribution):
         logger.info(f"starting generation {distrib.name=}, {size=}")
         random_samples = distrib.get(len(self._char_set) * SINGLE_CHAR_SAMPLES_COUNT)
 
-        multiplier = 1000
-        multiplied = (random_samples * multiplier).astype("int64")
-
-        chars_probability, _ = histogram(a=random_samples, bins=len(self._char_set), density=True)
+        chars_probability, _ = histogram(
+            a=random_samples, bins=tuple(range(0, len(self.char_set) + 1)), density=True
+        )
 
         self._char_set.sort()
         generated_set = array(
@@ -62,8 +46,8 @@ class Generator:
         return RandomText(
             name=distrib.name,
             text=generated_set,
-            # stdev=round(multiplied.std()/multiplier, 4),
-            # mean=round(multiplied.mean()/multiplier, 4),
+            stdev=round(random_samples.std(), 4),
+            mean=round(random_samples.mean(), 4),
             charset=self.char_set,
             distribution=distrib.name,
             arguments=distrib.args,

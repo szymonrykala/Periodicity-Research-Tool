@@ -55,7 +55,10 @@ class RandomText:
     def from_json(cls, string: str):
         obj = json.loads(string)
         for field in ("text", "charset", "density_matrix"):
-            obj[field] = array(obj[field])
+            if field in obj:
+                obj[field] = array(obj[field])
+            else:
+                obj[field] = array([])
 
         obj["id"] = UUID(obj["id"])
 
@@ -78,12 +81,12 @@ class RandomText:
 
     def __post_init__(self):
         if not self._async_done:
-            Thread(target=self.__async_compute_desity_matrix).start()
+            Thread(target=self.__async_compute_density_matrix).start()
 
     def __hash__(self):
         return hash(str(self.text))
 
-    def __async_compute_desity_matrix(self):
+    def __async_compute_density_matrix(self):
         logger.info("async computing if needed")
         i = 0
 
@@ -102,16 +105,8 @@ class RandomText:
             )
             i += 1
 
-        if self.stdev is None:
-            self.stdev = round(stdev(self.density_matrix), 4)
-            i += 1
-
-        if self.mean is None:
-            self.mean = round(mean(self.density_matrix), 4)
-            i += 1
-
         self._async_done = True
-        logger.info(f"async computing done '{i}' elements")
+        logger.info(f"async computing done; '{i}' elements")
 
     def to_json(self):
         return json.dumps(asdict(self), cls=NpEncoder)

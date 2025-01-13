@@ -2,10 +2,16 @@ __alg_name__ = "Karp-Rabin"
 __doc__ = "Algorytm Karpa Rabina - wykorzystuje haszowanie"
 
 
-def main(*, text: list, pattern: list, alphabet_size: int = 256, prime: int = 101):
+def main(*, text: list, pattern: list, alphabet_size: int = 256, prime: int = 1000003):
     pattern_length = len(pattern)
     text_length = len(text)
-    h = pow(alphabet_size, pattern_length - 1, prime)  # Calculate d^(m-1) % q for efficient rolling hash
+
+    if pattern_length == 0 or text_length == 0 or pattern_length > text_length:
+        return []
+
+    h = pow(
+        alphabet_size, pattern_length - 1, prime
+    )  # Calculate d^(m-1) % q for efficient rolling hash
     results = []
 
     # Calculate hash value for pattern and the initial substring of text

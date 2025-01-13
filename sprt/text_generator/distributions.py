@@ -5,11 +5,9 @@ from typing import Any
 import numpy as np
 from numpy.random import Generator, default_rng
 
-from sprt.config import RANDOM_GENERATOR_SEED
-
 
 class Distribution(ABC):
-    np_rgen: Generator = default_rng(RANDOM_GENERATOR_SEED)
+    np_rgen: Generator = default_rng()
     _name: str = "base distribution class"
 
     def __init__(self, **kwargs):
@@ -29,8 +27,7 @@ class Distribution(ABC):
         return cls.__init__.__annotations__
 
     @abstractmethod
-    def get(self, size: int) -> np.ndarray[Any, np.dtype[np.float64]]:
-        ...
+    def get(self, size: int) -> np.ndarray[Any, np.dtype[np.float64]]: ...
 
 
 class Normal(Distribution):

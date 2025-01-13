@@ -9,6 +9,7 @@ from sprt.algorithms import Algorithm, AlgorithmStore
 from sprt.analysis.analysis import PeriodicityAnalysis
 from sprt.config import (
     ENV_STABLE_WAIT_TIME,
+    ENV_TIME_DEVIATION_REPEATS,
     ENV_TIME_DEVIATION_THRESHOLD,
     TIME_MEASURE_MEAN_COUNT,
 )
@@ -138,7 +139,7 @@ class TimeMeasurement:
         start_time = time()
 
         logger.info(f"Badanie stabilności środowiska ...")
-        while tries < TIME_MEASURE_MEAN_COUNT:
+        while tries < ENV_TIME_DEVIATION_REPEATS:
             mean_time, deviation = self.__get_reference_measure()
             self.message.set(f"Badanie stabilności środowiska: stdev={deviation}")
             logger.debug(

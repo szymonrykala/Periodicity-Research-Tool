@@ -5,6 +5,10 @@ __doc__ = "Algorytm wykorzystujący tablicę przsunięć do obliczania skoku"
 def main(*, text: list, pattern: list):
     pattern_length = len(pattern)
     text_length = len(text)
+
+    if pattern_length == 0 or text_length == 0 or pattern_length > text_length:
+        return []
+
     shift_table = generate_shift_table(pattern, pattern_length)
 
     i = pattern_length - 1  # text index
