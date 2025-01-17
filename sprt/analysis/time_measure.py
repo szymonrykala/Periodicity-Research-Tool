@@ -97,7 +97,7 @@ class TimeMeasurement:
         self.__algorithms = algorithms
         self.__patterns = sorted(patterns, key=lambda p: p.length)
         self.__env_ref_algorithm = AlgorithmStore().time_reference_algorithm
-        self.__env_ref_algorithm_time: float = 0.0
+        self.__env_ref_algorithm_time: Optional[float] = None
 
         self.__results: Optional[PerformanceResultsData] = None
         self.message = StringVar(value="")
@@ -118,9 +118,13 @@ class TimeMeasurement:
 
     @property
     def time_reference(self) -> float:
-        if self.__env_ref_algorithm_time == 0.0:
+        if not self.__env_ref_algorithm_time:
             raise RuntimeError("Environment reference was not taken")
         return self.__env_ref_algorithm_time
+    
+    @time_reference.setter
+    def time_reference(self, value:float):
+        self.__env_ref_algorithm_time = value
 
     def __get_reference_measure(self) -> tuple[float, float]:
         def _measure():
@@ -155,7 +159,8 @@ class TimeMeasurement:
                     self.ready.set(False)
                     raise EnvNotStableError()
 
-        self.__env_ref_algorithm_time = mean_time
+        self.time_reference = mean_time
+        logger.info(f"Time reference has been set to '{self.time_reference}'")
         return True
 
     def __run_for_pattern(self, analysis: PeriodicityAnalysis, pattern: RandomText) -> ResultsMean:
