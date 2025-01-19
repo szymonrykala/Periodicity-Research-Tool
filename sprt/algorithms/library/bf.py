@@ -6,7 +6,7 @@ def main(*, text: list, pattern: list):
     text_length, pattern_length = len(text), len(pattern)
     results = []
 
-    if not pattern or not text or len(pattern) > len(text):
+    if not pattern_length or not text_length or pattern_length > text_length:
         return []
 
     for i in range(1 + (text_length - pattern_length)):
