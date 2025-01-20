@@ -1,0 +1,11 @@
+#!/bin/bash
+
+poetry run pyinstaller sprt/__main__.py \
+    --noconfirm \
+    --onefile \
+    --onedir \
+    --windowed \
+    --add-data "sprt/static/:sprt/static/" \
+    --add-data "sprt/algorithms/:sprt/algorithms/" \
+    -i sprt/static/app_icon.png \
+    --name sprt_app

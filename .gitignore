@@ -6,6 +6,7 @@ __pycache__
 /TeX*
 *.db
 
-__main__.spec
+*.spec
+*.app
 build/
 dist/
