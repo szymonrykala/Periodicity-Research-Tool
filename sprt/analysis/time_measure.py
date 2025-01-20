@@ -121,9 +121,9 @@ class TimeMeasurement:
         if not self.__env_ref_algorithm_time:
             raise RuntimeError("Environment reference was not taken")
         return self.__env_ref_algorithm_time
-    
+
     @time_reference.setter
-    def time_reference(self, value:float):
+    def time_reference(self, value: float):
         self.__env_ref_algorithm_time = value
 
     def __get_reference_measure(self) -> tuple[float, float]:

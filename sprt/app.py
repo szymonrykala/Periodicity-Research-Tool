@@ -19,7 +19,7 @@ class App:
         self.master.minsize(800, 500)
         self.master.title("Periodicity Research Tool")
 
-        self.icon = PhotoImage(file=STATIC_DIR + "app_icon.png")
+        self.icon = PhotoImage(file=STATIC_DIR.joinpath("app_icon.png"))
         self.master.iconphoto(True, self.icon)
 
         master.protocol("WM_DELETE_WINDOW", self.__on_close)
@@ -122,3 +122,9 @@ class App:
 
         # ---- TEXT ENTRY ----
         s.configure("TEntry", insertcolor=Color.dark_font)
+
+
+if __name__ == "__main__":
+    root = Tk()
+    app = App(root)
+    root.mainloop()

@@ -1,12 +1,10 @@
 import string
 from logging import DEBUG, INFO
-from os import getcwd
+from pathlib import Path
 
 from matplotlib import use
 
 use("TkAgg")
-
-CWD = getcwd()
 
 LOGGER_NAME = "SPRT"
 LOGGING_LEVEL = INFO
@@ -19,7 +17,9 @@ ENV_STABLE_WAIT_TIME = 30
 ENV_TIME_DEVIATION_THRESHOLD = 0.0005
 ENV_TIME_DEVIATION_REPEATS = 5
 
-DB_FILE = CWD + "/sprt/static/sprt_database.sqlite"
-STATIC_DIR = CWD + "/sprt/static/"
+cwd = Path(__file__).parent
+
+DB_FILE = "/tmp/sprt_database.sqlite"
+STATIC_DIR = cwd.joinpath("static")
 
 DISPLAY_TREND_LINES = False

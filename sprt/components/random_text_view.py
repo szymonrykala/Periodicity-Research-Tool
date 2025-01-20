@@ -13,10 +13,10 @@ from sprt.text_generator import RandomText
 
 _ICON_SIZE = 17
 
-_eye_icon = Image.open(STATIC_DIR + "eye.png").resize(
+_EYE_ICON = Image.open(STATIC_DIR.joinpath("eye.png")).resize(
     (_ICON_SIZE + round(_ICON_SIZE / 4), _ICON_SIZE)
 )
-_edit_icon = Image.open(STATIC_DIR + "edit.png").resize((_ICON_SIZE, _ICON_SIZE))
+_EDIT_ICON = Image.open(STATIC_DIR.joinpath("edit.png")).resize((_ICON_SIZE, _ICON_SIZE))
 
 
 class PatternTextView(SelectableWidget):
@@ -24,7 +24,7 @@ class PatternTextView(SelectableWidget):
         self.configure(style="ListItem.TFrame")
 
         self.pattern = item
-        self._eye_icon = ImageTk.PhotoImage(_eye_icon)
+        self._eye_icon = ImageTk.PhotoImage(_EYE_ICON)
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -60,8 +60,8 @@ class GeneratedRandomTextView(SelectableWidget):
         self.configure(style="ListItem.TFrame")
 
         self._random_text = item
-        self._eye_icon = ImageTk.PhotoImage(_eye_icon)
-        self._edit_icon = ImageTk.PhotoImage(_edit_icon)
+        self._eye_icon = ImageTk.PhotoImage(_EYE_ICON)
+        self._edit_icon = ImageTk.PhotoImage(_EDIT_ICON)
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure([0, 1], weight=1)

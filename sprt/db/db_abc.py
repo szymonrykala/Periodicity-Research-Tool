@@ -18,7 +18,7 @@ class Database(ABC):
         db_file = Path(DB_FILE)
 
         if not db_file.exists():
-            db_file.parent.mkdir(parents=True)
+            db_file.parent.mkdir(parents=True, exist_ok=True)
 
         self.__db = Connection(database=DB_FILE, check_same_thread=False, isolation_level=None)
 
