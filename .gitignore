@@ -5,3 +5,7 @@ __pycache__
 .DS_Store
 /TeX*
 *.db
+
+__main__.spec
+build/
+dist/
