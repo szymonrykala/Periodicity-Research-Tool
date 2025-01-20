@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 from sqlite3 import Connection, Cursor
 
 from sprt.config import DB_FILE
@@ -13,6 +14,12 @@ class Query(ABC):
 class Database(ABC):
     def __init__(self, table_name: str):
         self._table = table_name
+
+        db_file = Path(DB_FILE)
+
+        if not db_file.exists():
+            db_file.parent.mkdir(parents=True)
+
         self.__db = Connection(database=DB_FILE, check_same_thread=False, isolation_level=None)
 
     @property
