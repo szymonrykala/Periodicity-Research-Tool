@@ -34,7 +34,7 @@ class PatternTextView(SelectableWidget):
 
         self.eye_icon_label = ttk.Label(
             self,
-            cursor="hand",
+            cursor="hand2",
             image=self._eye_icon,
         )
         self.eye_icon_label.grid(row=0, column=1, sticky="e", padx=(5, 5))
@@ -71,7 +71,7 @@ class GeneratedRandomTextView(SelectableWidget):
 
         self.name_edit_icon = ttk.Label(
             self,
-            cursor="hand",
+            cursor="hand2",
             image=self._edit_icon,
             compound="image",
         )
@@ -82,7 +82,7 @@ class GeneratedRandomTextView(SelectableWidget):
         )
         self.name_edit_icon.bind("<Button-1>", self.__handle_name_change)
 
-        self.eye_icon = ttk.Label(self, cursor="hand", image=self._eye_icon, compound="image")
+        self.eye_icon = ttk.Label(self, cursor="hand2", image=self._eye_icon, compound="image")
         self.eye_icon.grid(row=0, column=2, sticky="e", padx=5)
         self.eye_icon.bind("<Button-1>", lambda _: TextSetWindow(self._random_text))
 

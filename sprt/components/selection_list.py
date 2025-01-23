@@ -212,7 +212,7 @@ class WidgetSelectionList(SelectionList):
                 style="Secondary.TButton",
                 padding=0,
                 width=8,
-                cursor="hand",
+                cursor="hand2",
             ).grid(column=1, row=0, sticky=E)
             self.select_all_check.grid(column=0, row=0, sticky=W)
             controls.pack(fill=X, anchor=S)

@@ -7,7 +7,7 @@ class Checkbox(ttk.Checkbutton):
         self.__on_value = onvalue
         self.__off_value = offvalue
         self.__command = kwargs.get("command", lambda: None)
-        kwargs.update(variable=self.__var, cursor="hand")
+        kwargs.update(variable=self.__var, cursor="hand2")
 
         super().__init__(master, **kwargs)
 
