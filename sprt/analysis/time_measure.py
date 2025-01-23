@@ -29,6 +29,9 @@ class ResultsMean:
         self.stdev = stdev(work_time)
 
     def refer_env(self, ref_time: float) -> "ResultsMean":
+        if ref_time <= 0:
+            raise ValueError("Reference time cannot be equal or less than 0")
+
         self.time = self.time / ref_time
         return self
 
