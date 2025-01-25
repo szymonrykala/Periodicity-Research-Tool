@@ -1,4 +1,3 @@
-#!/bin/bash
 
 poetry run pyinstaller sprt/__main__.py \
     --noconfirm \

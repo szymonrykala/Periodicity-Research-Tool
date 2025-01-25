@@ -17,6 +17,19 @@ isort = "5.13.2"
 pytest = "8.3.4"
 pyinstaller = "6.11.1"
 mock = "5.1.0"
+poethepoet = "0.32.1"
+
+[tool.poe]
+shell_interpreter = ["sh", "pwsh"]
+
+[tool.poe.tasks.test]
+shell = "pytest -v ."
+
+[tool.poe.tasks.format]
+shell = "./scripts/format"
+
+[tool.poe.tasks.build]
+shell = "./scripts/build"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
