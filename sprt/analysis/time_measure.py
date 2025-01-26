@@ -20,13 +20,13 @@ from sprt.utils import bytes_to_str
 
 @dataclass
 class ResultsMean:
-    stdev: float
+    rel_stdev: float
     time: float
 
     def __init__(self, measures: Iterable[float]):
         work_time = tuple(measures)
         self.time = mean(work_time)
-        self.stdev = stdev(work_time)
+        self.rel_stdev = stdev(work_time) / self.time
 
     def refer_env(self, ref_time: float) -> "ResultsMean":
         if ref_time <= 0:
@@ -38,14 +38,14 @@ class ResultsMean:
 
 @dataclass
 class RunPerformanceData:
-    stdev: list[float]
+    rel_stdev: list[float]
     time: list[float]
 
     def __init__(self, results_list: Iterable[ResultsMean]):
-        self.stdev, self.time = [], []
+        self.rel_stdev, self.time = [], []
 
         for r in results_list:
-            self.stdev.append(r.stdev)
+            self.rel_stdev.append(r.rel_stdev)
             self.time.append(r.time)
 
 
@@ -136,7 +136,9 @@ class TimeMeasurement:
             return time() - start
 
         measured_times = [_measure() for _ in range(0, TIME_MEASURE_MEAN_COUNT + 1)]
-        return mean(measured_times), stdev(measured_times)
+
+        mean_time = mean(measured_times)
+        return mean_time, stdev(measured_times) / mean_time
 
     def _is_environment_stable(self):
         mean_time = 0
@@ -148,7 +150,7 @@ class TimeMeasurement:
         logger.info(f"Badanie stabilności środowiska ...")
         while tries < ENV_TIME_DEVIATION_REPEATS:
             mean_time, deviation = self.__get_reference_measure()
-            self.message.set(f"Badanie stabilności środowiska: stdev={deviation}")
+            self.message.set(f"Badanie stabilności środowiska: rel stdev={deviation}")
             logger.debug(
                 f"Badanie środowiska: wymagana dewiacja < {ENV_TIME_DEVIATION_THRESHOLD}, aktualnie = {deviation}"
             )
@@ -175,11 +177,12 @@ class TimeMeasurement:
                 )
             ).refer_env(self.time_reference)
 
-            if result.stdev < ENV_TIME_DEVIATION_THRESHOLD:
+            if result.rel_stdev < ENV_TIME_DEVIATION_THRESHOLD:
                 return result
-            
-            logger.warning(f"stdev to high: {result.stdev} > {ENV_TIME_DEVIATION_THRESHOLD}")
 
+            logger.warning(
+                f"rel stdev to high: {result.rel_stdev} > {ENV_TIME_DEVIATION_THRESHOLD}"
+            )
 
     def __run_for_algorithm(self, algorithm: Algorithm) -> TextRunResults:
         logger.info(f"Start analyse for algorithm '{algorithm.name}'")

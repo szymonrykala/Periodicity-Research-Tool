@@ -24,14 +24,14 @@ def tkinter_root():
 @pytest.mark.parametrize(
     "measures, expected_mean, expected_stdev",
     [
-        ([1.0, 1.5, 2.0], mean([1.0, 1.5, 2.0]), stdev([1.0, 1.5, 2.0])),
+        ([1.0, 1.5, 2.0], mean([1.0, 1.5, 2.0]), stdev([1.0, 1.5, 2.0])/mean([1.0, 1.5, 2.0])),
         ([2.0, 2.0, 2.0], 2.0, 0.0),
     ],
 )
 def test_results_mean_initialization(measures, expected_mean, expected_stdev):
     result = ResultsMean(measures)
     assert result.time == expected_mean
-    assert result.stdev == expected_stdev
+    assert result.rel_stdev == expected_stdev
 
 
 @pytest.mark.parametrize(
@@ -52,7 +52,7 @@ def test_results_mean_refer_env(measures, ref_time, expected_mean):
     [
         (
             [ResultsMean([1.0, 2.0]), ResultsMean([1.5, 2.5])],
-            [stdev([1.0, 2.0]), stdev([1.5, 2.5])],
+            [stdev([1.0, 2.0])/mean([1.0, 2.0]), stdev([1.5, 2.5])/mean([1.5, 2.5])],
             [mean([1.0, 2.0]), mean([1.5, 2.5])],
         ),
         (
@@ -65,7 +65,7 @@ def test_results_mean_refer_env(measures, ref_time, expected_mean):
 def test_run_performance_data_initialization(results, expected_stdev, expected_mean):
     performance_data = RunPerformanceData(results)
 
-    assert pytest.approx(performance_data.stdev, rel=1e-6) == expected_stdev
+    assert pytest.approx(performance_data.rel_stdev, rel=1e-6) == expected_stdev
     assert performance_data.time == expected_mean
 
 

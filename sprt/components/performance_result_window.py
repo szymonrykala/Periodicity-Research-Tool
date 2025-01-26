@@ -62,7 +62,7 @@ class PerformanceResultWindow(TopLevelABC):
         for alg_name, text_set_measurements in self.measurements.data.items():
             for text_set_name, measurements in text_set_measurements.items():
                 for pattern_len, time, dev in zip(
-                    self.measurements.patterns_length, measurements.time, measurements.stdev
+                    self.measurements.patterns_length, measurements.time, measurements.rel_stdev
                 ):
                     dump.writerow([pattern_len, alg_name, text_set_name, time, dev])
         file.close()

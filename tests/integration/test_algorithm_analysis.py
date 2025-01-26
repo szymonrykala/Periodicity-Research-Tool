@@ -134,4 +134,4 @@ def test_time_measurement_execution(
         ) in time_measure.results.transformed_data.items():
             for text_set_name, measurements in text_set_results.items():
                 assert isinstance(measurements.time, list)
-                assert isinstance(measurements.stdev, list)
+                assert isinstance(measurements.rel_stdev, list)
