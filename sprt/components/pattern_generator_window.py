@@ -32,7 +32,7 @@ class PatternParametersController:
     def patterns_range(self):
         return range(
             self.sets_params_vars["od"].get(),
-            self.sets_params_vars["do"].get(),
+            self.sets_params_vars["do"].get() + 1,
             self.sets_params_vars["krok"].get(),
         )
 
