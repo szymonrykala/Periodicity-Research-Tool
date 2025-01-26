@@ -1,7 +1,8 @@
-import pytest
 import numpy as np
+import pytest
+
+from sprt.text_generator.distributions import Exponential, Normal, Uniform
 from sprt.text_generator.generator import Generator
-from sprt.text_generator.distributions import Normal, Uniform, Exponential
 from sprt.text_generator.random_text import RandomText
 
 
@@ -18,9 +19,7 @@ def generator_instance():
         (Exponential, {"stdev": 2.0}, 200),
     ],
 )
-def test_text_generation_with_distributions(
-    generator_instance, distribution, dist_params, size
-):
+def test_text_generation_with_distributions(generator_instance, distribution, dist_params, size):
     distrib = distribution(**dist_params)
     generated_text = generator_instance.generate(size=size, distrib=distrib)
 
@@ -64,9 +63,7 @@ def test_generator_text_generation_stats(generator_instance):
         (Exponential, {"stdev": 2.0}),
     ],
 )
-def test_generator_distribution_integration(
-    generator_instance, distribution, dist_params
-):
+def test_generator_distribution_integration(generator_instance, distribution, dist_params):
     distrib = distribution(**dist_params)
 
     generated_text = generator_instance.generate(size=500, distrib=distrib)

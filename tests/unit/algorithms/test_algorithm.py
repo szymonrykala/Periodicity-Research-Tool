@@ -1,7 +1,9 @@
-import pytest
-import numpy as np
 from unittest.mock import MagicMock, patch
-from sprt.algorithms.algorithm import Result, Algorithm, AlgorithmStore, AlgArgument
+
+import numpy as np
+import pytest
+
+from sprt.algorithms.algorithm import AlgArgument, Algorithm, AlgorithmStore, Result
 
 
 # Testy dla Result
@@ -17,9 +19,7 @@ def test_result_initialization(time, value, pattern):
     result = Result(time=time, value=value, pattern=pattern)
     assert result.raw_time == time
     assert result.value == value
-    assert (result.pattern is None and pattern is None) or np.array_equal(
-        result.pattern, pattern
-    )
+    assert (result.pattern is None and pattern is None) or np.array_equal(result.pattern, pattern)
     assert result.time is None
 
 
@@ -96,9 +96,7 @@ def test_algorithm_args():
     ],
 )
 @patch("importlib.import_module")
-def test_algorithm_store_time_reference_algorithm(
-    mock_import_module, alg_name, alg_doc, alg_fn
-):
+def test_algorithm_store_time_reference_algorithm(mock_import_module, alg_name, alg_doc, alg_fn):
     # Przygotowanie mocków
     mock_system = MagicMock()
     mock_alg = MagicMock()

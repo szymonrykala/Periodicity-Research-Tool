@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+
 from sprt.utils import bytes_to_str, validate_digit_input
 
 

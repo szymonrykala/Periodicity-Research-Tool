@@ -1,7 +1,9 @@
-import pytest
 from unittest.mock import MagicMock, patch
-from sprt.text_generator import RandomText
+
+import pytest
+
 from sprt.db.db import RandomTextDatabase
+from sprt.text_generator import RandomText
 
 
 @pytest.fixture
@@ -63,9 +65,7 @@ def test_random_text_database_delete(mock_database, mock_random_text):
 
     db.delete(mock_random_text)
 
-    mock_run.assert_any_call(
-        "DELETE FROM {table} WHERE id=:id", {"id": "1234"}
-    )
+    mock_run.assert_any_call("DELETE FROM {table} WHERE id=:id", {"id": "1234"})
 
 
 def test_random_text_database_update(mock_database, mock_random_text):

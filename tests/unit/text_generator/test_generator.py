@@ -1,8 +1,10 @@
-import pytest
-import numpy as np
 from unittest.mock import MagicMock, patch
-from sprt.text_generator.generator import Generator, RandomText
+
+import numpy as np
+import pytest
+
 from sprt.text_generator.distributions import Normal
+from sprt.text_generator.generator import Generator, RandomText
 
 
 def test_generator_initialization():

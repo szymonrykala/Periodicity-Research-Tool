@@ -1,4 +1,5 @@
 import pytest
+
 from sprt.algorithms.library.bm import main
 
 

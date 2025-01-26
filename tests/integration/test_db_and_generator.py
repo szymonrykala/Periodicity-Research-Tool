@@ -1,9 +1,11 @@
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
+
 from sprt.db.db import RandomTextDatabase
+from sprt.text_generator.distributions import Normal
 from sprt.text_generator.generator import Generator
 from sprt.text_generator.random_text import RandomText
-from sprt.text_generator.distributions import Normal
 
 
 @pytest.fixture

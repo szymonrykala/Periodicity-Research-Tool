@@ -1,9 +1,11 @@
-import pytest
-import numpy as np
-from unittest.mock import patch, MagicMock
-from sprt.text_generator.random_text import RandomText
-from uuid import UUID
 import json
+from unittest.mock import MagicMock, patch
+from uuid import UUID
+
+import numpy as np
+import pytest
+
+from sprt.text_generator.random_text import RandomText
 
 
 def test_random_text_initialization():

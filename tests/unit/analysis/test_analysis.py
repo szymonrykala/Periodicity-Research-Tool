@@ -1,8 +1,10 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 import pytest
-from sprt.analysis.analysis import PeriodicityAnalysis, AnalysisResult
-from sprt.text_generator.random_text import RandomText
+
 from sprt.algorithms.algorithm import Algorithm
+from sprt.analysis.analysis import AnalysisResult, PeriodicityAnalysis
+from sprt.text_generator.random_text import RandomText
 
 
 @pytest.fixture
@@ -42,9 +44,7 @@ def mock_patterns():
 
 @pytest.fixture
 @patch("sprt.analysis.analysis.BooleanVar")
-def periodicity_analysis(
-    mock_boolean_var, mock_random_text, mock_algorithm, mock_patterns
-):
+def periodicity_analysis(mock_boolean_var, mock_random_text, mock_algorithm, mock_patterns):
     """Fixture dla instancji PeriodicityAnalysis."""
     mock_boolean_var.return_value = MagicMock()
     return PeriodicityAnalysis(
@@ -83,9 +83,7 @@ def test_periodicity_analysis_find_indexes(periodicity_analysis, mock_patterns):
 def test_periodicity_analysis_count_occurrences_offsets(
     periodicity_analysis, indexes, expected_offsets
 ):
-    result = periodicity_analysis._PeriodicityAnalysis__count_occurrences_offsets(
-        indexes
-    )
+    result = periodicity_analysis._PeriodicityAnalysis__count_occurrences_offsets(indexes)
     assert result == expected_offsets
 
 
@@ -100,9 +98,7 @@ def test_periodicity_analysis_count_occurrences_offsets(
 def test_periodicity_analysis_count_index_offset_groups(
     periodicity_analysis, offsets, expected_groups
 ):
-    result = periodicity_analysis._PeriodicityAnalysis__count_index_offset_groups(
-        offsets
-    )
+    result = periodicity_analysis._PeriodicityAnalysis__count_index_offset_groups(offsets)
     assert result == expected_groups
 
 
@@ -121,9 +117,7 @@ def test_patterns_occurrences(mock_executor, periodicity_analysis, mock_patterns
 @patch("sprt.analysis.analysis.Thread")
 def test_run_async(mock_thread, periodicity_analysis):
     periodicity_analysis.run_async()
-    mock_thread.assert_called_once_with(
-        target=periodicity_analysis.patterns_occurrences
-    )
+    mock_thread.assert_called_once_with(target=periodicity_analysis.patterns_occurrences)
 
 
 def test_measure_single_pattern_run(periodicity_analysis, mock_patterns):

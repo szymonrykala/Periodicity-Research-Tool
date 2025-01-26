@@ -1,9 +1,11 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
+
+from sprt.algorithms.algorithm import Algorithm
 from sprt.analysis.analysis import PeriodicityAnalysis
 from sprt.analysis.time_measure import TimeMeasurement
 from sprt.text_generator import RandomText
-from sprt.algorithms.algorithm import Algorithm
 
 
 @pytest.fixture

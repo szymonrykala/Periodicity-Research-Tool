@@ -1,12 +1,13 @@
-import pytest
 import numpy as np
+import pytest
+
 from sprt.text_generator.distributions import (
     Distribution,
-    Normal,
     Exponential,
+    Normal,
     Uniform,
-    distributions_list,
     distributions_dict,
+    distributions_list,
 )
 
 
