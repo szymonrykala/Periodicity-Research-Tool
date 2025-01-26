@@ -135,7 +135,7 @@ class TimeMeasurement:
             self.__env_ref_algorithm.run()
             return time() - start
 
-        measured_times = [_measure() for _ in range(0, TIME_MEASURE_MEAN_COUNT)]
+        measured_times = [_measure() for _ in range(0, TIME_MEASURE_MEAN_COUNT + 1)]
         return mean(measured_times), stdev(measured_times)
 
     def _is_environment_stable(self):
@@ -167,16 +167,28 @@ class TimeMeasurement:
         return True
 
     def __run_for_pattern(self, analysis: PeriodicityAnalysis, pattern: RandomText) -> ResultsMean:
-        return ResultsMean(
-            (
-                analysis.measure_single_pattern_run(pattern=pattern)
-                for _ in range(0, TIME_MEASURE_MEAN_COUNT)
-            )
-        ).refer_env(self.time_reference)
+        while True:
+            result = ResultsMean(
+                (
+                    analysis.measure_single_pattern_run(pattern=pattern)
+                    for _ in range(0, TIME_MEASURE_MEAN_COUNT + 1)
+                )
+            ).refer_env(self.time_reference)
+
+            if result.stdev < ENV_TIME_DEVIATION_THRESHOLD:
+                return result
+            
+            logger.warning(f"stdev to high: {result.stdev} > {ENV_TIME_DEVIATION_THRESHOLD}")
+
 
     def __run_for_algorithm(self, algorithm: Algorithm) -> TextRunResults:
+        logger.info(f"Start analyse for algorithm '{algorithm.name}'")
+
         results = {}
         for text_set in self.__text_sets:
+            logger.info(f"Start analyse for test_set '{text_set.name}'")
+            self.message.set(f"Pomiar dla '{algorithm.name}', '{text_set.name}'")
+
             analysis = PeriodicityAnalysis(text_set=text_set, algorithm=algorithm, patterns=[])
             results[text_set.name] = RunPerformanceData(
                 (self.__run_for_pattern(analysis, pattern) for pattern in self.__patterns)
