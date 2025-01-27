@@ -1,3 +1,6 @@
+import os
+from typing import TypeVar
+
 from numpy import ndarray
 
 
@@ -16,3 +19,11 @@ def bytes_to_str(value: list | ndarray | str) -> str:
 
 def validate_digit_input(value: str) -> bool:
     return value.isdigit() or value in "."
+
+
+T = TypeVar("T")
+
+
+def get_env(name: str, default: T) -> T:
+    value = os.getenv("SPRT_" + name, default)
+    return type(default)(value)
