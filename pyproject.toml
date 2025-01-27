@@ -31,6 +31,9 @@ shell = "./scripts/format"
 [tool.poe.tasks.build]
 shell = "./scripts/build"
 
+[tool.poe.tasks.run-build]
+shell = "./dist/sprt_app/sprt_app"
+
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
