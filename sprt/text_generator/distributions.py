@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from functools import cached_property
+from math import sqrt
 from typing import Any
 
 import numpy as np
@@ -57,10 +58,10 @@ class Uniform(Distribution):
         super().__init__(mean=mean, stdev=stdev)
 
     def get(self, size: int):
-        offset = self.args["stdev"] / 2
+        stdev = self.args["stdev"]
         return self.np_rgen.uniform(
-            low=self.args["mean"] - offset,
-            high=self.args["mean"] + offset,
+            low=self.args["mean"] - sqrt(3) * stdev,
+            high=self.args["mean"] + sqrt(3) * stdev,
             size=size,
         )
 
