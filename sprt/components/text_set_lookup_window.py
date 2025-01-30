@@ -3,6 +3,7 @@ from functools import cache
 from tkinter import BOTH, VERTICAL, X, ttk
 
 from sprt.components import ScrollableFrame, TextField
+from sprt.logger import logger
 from sprt.text_generator import RandomText
 from sprt.utils import bytes_to_str
 
@@ -19,7 +20,7 @@ class GeneratedTextWindowController:
         out = {}
 
         for i in range(self.text.length - count + 1):
-            chunk = bytes(self.text.text[i : i + count].tolist())
+            chunk = bytes_to_str(bytes(self.text.text[i : i + count].tolist()))
             out.setdefault(chunk, 0)
             out[chunk] += 1
 
@@ -27,6 +28,7 @@ class GeneratedTextWindowController:
         for k, v in out.items():
             grouped_by_count.setdefault(v, []).append(k)
 
+        logger.debug(f"Countig '{count}' sign groups finished")
         return grouped_by_count
 
 
@@ -64,11 +66,13 @@ class TextSetWindow(TopLevelABC):
         self.pack_group_charts(frame)
 
     def pack_group_charts(self, frame):
-        with ThreadPoolExecutor() as exec:
-            groups = range(2, 7, 1)
-            jobs = exec.map(self.controller.get_groups, groups)
+        groups = range(2, 10, 1)
+        grouped_data: list[dict] = []
 
-        for i, data in zip(groups, jobs):
+        with ThreadPoolExecutor() as exec:
+            grouped_data = list(exec.map(self.controller.get_groups, groups))
+
+        for i, data in zip(groups, grouped_data):
             if len(data) > 1:
                 GroupChart(frame, group_size=i, data=data).pack(fill=X, pady=5)
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from io import BytesIO
-from tkinter import NE, NSEW, ttk
+from tkinter import NE, NSEW, X, ttk
 
 from matplotlib import pyplot
 from matplotlib.axes import Axes
@@ -25,12 +25,23 @@ class BasePlotFrame(ABC, ttk.Frame):
         self.__img_canvas = ttk.Label(self, text=title)
         self.__img_canvas.grid(column=0, row=0, sticky=NSEW)
 
+        buttons = ttk.Frame(self)
+        buttons.grid(row=0, column=0, sticky=NE)
+
         ttk.Button(
-            self,
+            buttons,
             text="Otwórz",
             command=self.__show_interactive,
-            padding=0,
-        ).grid(row=0, column=0, sticky=NE)
+            padding=1,
+        ).pack(expand=True, pady=3, fill=X)
+
+        if hasattr(self, "_save_data_to_file"):
+            ttk.Button(
+                buttons,
+                text="Eksportuj dane",
+                command=self._save_data_to_file,
+                padding=1,
+            ).pack(expand=True, fill=X)
 
     @property
     def ax(self) -> Axes:
