@@ -18,7 +18,8 @@ class PatternOccurrencesChart(BasePlotFrame):
         self.render_chart()
 
     def _draw(self):
-        self.ax.plot(self.y, "o-")
+        self.ax.plot(tuple(range(1, len(self.y) + 1)), self.y, "o-")
+        self.ax.set_ylim(ymin=0)
 
     def __del__(self):
         pyplot.close(self.fig)
@@ -44,9 +45,8 @@ class PatternIndexOffsetGroupsChart(BasePlotFrame):
         self.render_chart()
 
     def _draw(self):
-        self.fig.set_figwidth(13)
-
         self.ax.stem(self._x, self._y)
+        self.ax.set_xlim(xmin=0)
 
     def __del__(self):
         pyplot.close(self.fig)
