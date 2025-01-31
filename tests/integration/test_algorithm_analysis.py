@@ -102,7 +102,7 @@ def test_periodicity_analysis_execution(
         for result in analysis.results:
 
             assert isinstance(result.indexes, list)
-            assert result.indexes == [7]  # Oczekiwane dane
+            assert result.indexes == [1, 4, 7]  # Oczekiwane dane
 
         mock_find_indexes.assert_called()
         assert mock_find_indexes.call_count == len(random_patterns)

@@ -1,5 +1,6 @@
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
+from copy import copy
 from dataclasses import dataclass
 from functools import cached_property
 from threading import Thread
@@ -60,9 +61,11 @@ class PeriodicityAnalysis:
         if not indexes:
             return []
 
+        indexes_cp = copy(indexes)
+
         def _job():
-            last = indexes.pop(0)
-            for i in indexes:
+            last = indexes_cp.pop(0)
+            for i in indexes_cp:
                 yield i - last
                 last = i
 
