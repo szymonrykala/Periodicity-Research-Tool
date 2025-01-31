@@ -1,3 +1,4 @@
+import re
 from random import choices
 
 from numpy import array, histogram, ndarray
@@ -11,6 +12,7 @@ from .random_text import RandomText
 
 class Generator:
     def __init__(self) -> None:
+        self.__binary_mode = False
         self._char_set: ndarray = array(tuple(set(DEFAULT_CHARSET.encode())))
 
     @property
@@ -20,13 +22,18 @@ class Generator:
     @char_set.setter
     def char_set(self, value: str | bytes | ndarray):
         if isinstance(value, str):
-            value = value.encode()
+            if re.match(r"^b'.*'$", value):
+                value = eval(value)
+                self.__binary_mode = True
+            else:
+                value = value.encode()
+                self.__binary_mode = False
 
-        if len(array(tuple(set(value)))) == 0:
+        if len(tuple(set(value))) == 0:
             raise ValueError("Charset should not be empty")
 
         self._char_set = array(tuple(set(value)))
-        logger.info(f"Charset updated to {self._char_set}")
+        logger.info(f"Charset updated to {self._char_set}, binary_mode: {self.__binary_mode}")
 
     def generate(self, size: int, distrib: Distribution):
         logger.info(f"starting generation {distrib.name=}, {size=}")
@@ -52,4 +59,5 @@ class Generator:
             distribution=distrib.name,
             arguments=distrib.args,
             length=size,
+            _binary=self.__binary_mode,
         )

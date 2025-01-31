@@ -7,7 +7,7 @@ from statistics import mean, stdev
 from threading import Thread
 from time import sleep
 from typing import Iterable, Optional
-from uuid import UUID, uuid4
+from uuid import UUID, uuid1, uuid4
 
 from numpy import array, floating, integer, ndarray
 
@@ -45,6 +45,9 @@ class RandomText:
 
     @cached_property
     def parsed_text(self) -> str:
+        if self._binary:
+            return bytes(self.text.tolist())
+
         return bytes_to_str(self.text)
 
     @cached_property
@@ -63,6 +66,24 @@ class RandomText:
         obj["id"] = UUID(obj["id"])
 
         return cls(**obj)
+
+    @classmethod
+    def from_bytes(cls, value: bytes, name: str = "importowany"):
+        return cls(
+            name=name.split(os.sep)[-1],
+            text=array(tuple(value)),
+            distribution="importowany",
+            _binary=True,
+        )
+
+    @classmethod
+    def from_text(cls, value: str, name: str = "importowany"):
+        return cls(
+            name=name.split(os.sep)[-1],
+            text=array(tuple(value.encode())),
+            distribution="importowany",
+            _binary=False,
+        )
 
     @classmethod
     def from_bytes_or_text(cls, value: ndarray | Iterable | str, name: str = "importowany"):
@@ -96,6 +117,7 @@ class RandomText:
 
         if len(self.charset) == 0:
             self.charset = array(tuple(set(self.text)))
+            logger.debug(f"charset set to {self.charset}")
             i += 1
 
         if len(self.density_matrix) == 0:

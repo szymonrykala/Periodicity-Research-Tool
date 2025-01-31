@@ -1,3 +1,4 @@
+import re
 from tkinter import EW, NSEW, VERTICAL, IntVar, filedialog, simpledialog, ttk
 from typing import Callable, Optional
 
@@ -101,7 +102,7 @@ class PatternGeneratorWindowController:
 
     def generate_patterns(
         self,
-        charset: bytes,
+        charset: str,
         distributions: tuple[Distribution],
         length_range: range,
         repeats: int,
@@ -191,7 +192,13 @@ class PatternGeneratorWindow(TopLevelABC):
         if not pattern:
             return
 
-        self.local_list.append(
-            item=RandomText.from_bytes_or_text(tuple(pattern.encode()), name="użytkownik")
-        )
+        item: RandomText
+
+        if re.match(r"^b'.*'$", pattern):
+            item = RandomText.from_bytes(eval(pattern), name="użytkownik")
+
+        else:
+            item = RandomText.from_text(pattern, name="użytkownik")
+
+        self.local_list.append(item)
         logger.info(f"user pattern added: '{pattern}'")

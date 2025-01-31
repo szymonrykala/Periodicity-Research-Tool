@@ -1,6 +1,7 @@
 from tkinter import ttk
 
 from sprt.config import DEFAULT_CHARSET
+from sprt.utils.utils import bytes_to_str
 
 from .text_field import TextField
 
@@ -21,16 +22,13 @@ class CharsetEntry(ttk.Frame):
         self.set_default()
 
     @property
-    def value(self) -> bytes:
-        if self.entry.value.startswith("b'"):
-            return bytes(eval(self.entry.value))
-        else:
-            return self.entry.value.encode()
+    def value(self) -> str:
+        return self.entry.value
 
     @value.setter
     def value(self, value: bytes | str):
         self.entry.clear()
-        self.entry.value = str(value)
+        self.entry.value = bytes_to_str(value)
 
     def set_default(self):
         self.entry.clear()

@@ -1,8 +1,6 @@
 from tkinter import EW, NSEW, VERTICAL, IntVar, filedialog, ttk
 from typing import Callable, Optional
 
-import numpy
-
 from sprt.components import CharsetEntry, WidgetSelectionList
 from sprt.components.distributionView import DistributionView
 from sprt.components.top_level_abc import TopLevelABC
@@ -24,12 +22,15 @@ class GeneratorWindowController:
             return
         logger.info(f"loading file {selected_file}")
         text = None
-        content: numpy.ndarray = numpy.array(tuple(selected_file.read()))  # bytes array
+
+        file_content = selected_file.read()  # buffer can be read only once
+
         try:
-            text = RandomText.from_json(selected_file.read().decode())
+            text = RandomText.from_text(file_content.decode(), name=selected_file.name)
+
         except Exception as e:
             logger.error(e)
-            text = RandomText.from_bytes_or_text(content, name=selected_file.name)
+            text = RandomText.from_bytes(file_content, name=selected_file.name)  # bytes array
         finally:
             if text:
                 logger.info(f"file imported successfully")
@@ -113,7 +114,6 @@ class SetsGeneratorWindow(TopLevelABC):
     def __handle_generate_sets(self):
         sets = self.controller.generate_sets(self.charset.value, self.distributions.selected)  # type: ignore
         for text in sets:
-            print(f"{id(text)=}")
             self.local_list.append(text)
 
     def __handle_save_selected_sets(self):
