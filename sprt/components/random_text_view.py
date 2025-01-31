@@ -89,7 +89,7 @@ class GeneratedRandomTextView(SelectableWidget):
         self.params_label = ttk.Label(
             self,
             text=f"l={self._random_text.length}; mean={self._random_text.mean}; stdev={self._random_text.stdev}",
-            font=(15,),
+            font=(10,),
         )
         self.params_label.grid(row=1, column=0, columnspan=3, sticky="w", padx=5)
 
