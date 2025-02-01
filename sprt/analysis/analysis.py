@@ -94,8 +94,8 @@ class PeriodicityAnalysis:
 
     def patterns_occurrences(self):
         with ThreadPoolExecutor(4) as exec:
-            jobs = exec.map(self._pattern_occurrences_job, self.__patterns)
-            self.results = list(jobs)
+            self.results = list(exec.map(self._pattern_occurrences_job, self.__patterns))
+            self.results.sort(key=lambda item: len(item.indexes), reverse=True)
 
         logger.info(f"async analysis with '{self.__algorithm}' for '{self.__text_set.name}' DONE")
         self.ready.set(True)
