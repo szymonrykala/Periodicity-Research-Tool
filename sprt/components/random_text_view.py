@@ -108,7 +108,9 @@ class GeneratedRandomTextView(SelectableWidget):
             label.configure(style="TLabel")
 
     def __handle_name_change(self, _):
-        new_name = simpledialog.askstring("Zmiana nazwy", "Podaj nową nazwę: ")
+        new_name = simpledialog.askstring(
+            "Zmiana nazwy", "Podaj nową nazwę: ", initialvalue=self._random_text.name
+        )
         if not new_name:
             return
         logger.info(f"Updating name of {self._random_text.name}, {self._random_text.id}")
