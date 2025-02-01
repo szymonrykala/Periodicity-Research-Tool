@@ -105,7 +105,7 @@ def test_periodicity_analysis_count_index_offset_groups(
 @patch("sprt.analysis.analysis.ThreadPoolExecutor")
 def test_patterns_occurrences(mock_executor, periodicity_analysis, mock_patterns):
     mock_executor.return_value.__enter__.return_value.map.return_value = [
-        MagicMock(spec=AnalysisResult) for _ in mock_patterns
+        MagicMock(spec=AnalysisResult, indexes=[]) for _ in mock_patterns
     ]
 
     periodicity_analysis.patterns_occurrences()
