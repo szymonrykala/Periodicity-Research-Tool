@@ -24,14 +24,20 @@ class AnalysisWindow(TopLevelABC):
         scroll.pack(expand=True, fill=BOTH)
         frame = scroll.inner_frame
 
+        found_patterns_count = len(tuple(r for r in self.analysis.results if len(r.indexes) > 0))
+
         for label in (
-            ttk.Label(frame, text=f"Analizowany zbiór: {analysis.text_set.name}"),
-            ttk.Label(frame, text=f"Rozkład: {analysis.text_set.distribution}"),
+            ttk.Label(frame, text=f"Analizowany zbiór: {self.analysis.text_set.name}"),
+            ttk.Label(frame, text=f"Rozkład: {self.analysis.text_set.distribution}"),
             ttk.Label(
                 frame,
-                text=f"Rzeczywiste parametry: mean={analysis.text_set.mean}, stdev={analysis.text_set.stdev}",
+                text=f"Rzeczywiste parametry: mean={self.analysis.text_set.mean}, stdev={analysis.text_set.stdev}",
             ),
-            ttk.Label(frame, text=f"Ilość znaków: {analysis.text_set.length}"),
+            ttk.Label(frame, text=f"Ilość znaków: {self.analysis.text_set.length}"),
+            ttk.Label(
+                frame,
+                text=f"Znalezione wzorce: {found_patterns_count}/{len(self.analysis.results)}",
+            ),
         ):
             label.configure(padding=5)
             label.pack(fill=X)
@@ -42,7 +48,7 @@ class AnalysisWindow(TopLevelABC):
         ).pack(fill=X, ipadx=5)
 
         f = TextField(frame, height=7)
-        f.value = bytes_to_str(analysis.text_set.charset)
+        f.value = self.analysis.text_set.parsed_charset
         f.pack(fill=X, ipadx=5)
 
         ttk.Button(
@@ -52,8 +58,8 @@ class AnalysisWindow(TopLevelABC):
             padding=5,
         ).pack(expand=True, fill=X)
 
-        for result in analysis.results:
-            pattern_str = bytes_to_str(result.pattern.text)
+        for result in self.analysis.results:
+            pattern_str = result.pattern.parsed_text
             if result.index_offset:
                 PatternOccurrencesChart(frame, pattern=pattern_str, y=result.indexes).pack(fill=X)
 
